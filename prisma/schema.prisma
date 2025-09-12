@@ -59,6 +59,7 @@ model User {
   resumes  Resume[]
   verificationCodes VerificationCode[]
   calendarIntegrations CalendarIntegration[]
+  jobPostingAnalyses   JobPostingAnalysis[]
 }
 
 model VerificationCode {

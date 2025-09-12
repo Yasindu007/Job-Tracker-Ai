@@ -83,6 +83,8 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    ```env
    # Database
    DATABASE_URL="postgresql://username:password@localhost:5432/job_tracker"
+   # For cloud databases (Supabase, Neon, etc.), you often need to add ?sslmode=require
+   # DATABASE_URL="postgresql://user:password@host:port/db?sslmode=require"
    
    # NextAuth.js (Authentication)
    # Generate a secret: `openssl rand -base64 32`
@@ -116,8 +118,8 @@ A comprehensive full-stack platform that helps job seekers track applications, e
 
 4. **Set up the database**
    ```bash
-   npx prisma db push
-   npx prisma generate
+   npm run db:push
+   npm run db:generate
    ```
 
 5. **Start the development server**

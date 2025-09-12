@@ -18,6 +18,7 @@ if (!fs.existsSync(envPath)) {
 }
 
 // Install dependencies
+
 console.log('📦 Installing dependencies...');
 try {
   execSync('npm install', { stdio: 'inherit' });
@@ -27,31 +28,14 @@ try {
   process.exit(1);
 }
 
-// Generate Prisma client
-console.log('🗄️  Generating Prisma client...');
-try {
-  execSync('npx prisma generate', { stdio: 'inherit' });
-  console.log('✅ Prisma client generated.\n');
-} catch (error) {
-  console.error('❌ Failed to generate Prisma client:', error.message);
-  process.exit(1);
-}
-
-// Push database schema
-console.log('🗄️  Setting up database...');
-try {
-  execSync('npx prisma db push', { stdio: 'inherit' });
-  console.log('✅ Database schema pushed.\n');
-} catch (error) {
-  console.error('❌ Failed to push database schema:', error.message);
-  console.log('Please make sure your DATABASE_URL is correct in .env.local\n');
-  process.exit(1);
-}
-
 console.log('🎉 Setup complete!');
 console.log('\nNext steps:');
 console.log('1. Update your .env.local file with your configuration');
-console.log('2. Set up your AI service API keys (at least one required)');
-console.log('3. Configure OAuth providers (optional)');
-console.log('4. Run "npm run dev" to start the development server');
+console.log('   - For local PostgreSQL, your DATABASE_URL will look like: "postgresql://USER:PASSWORD@localhost:5432/job_tracker"');
+console.log('   - For cloud databases (like Supabase/Neon), it often needs "?sslmode=require" at the end.');
+console.log('2. Run `npx prisma migrate dev` to create a migration and apply it to the database.');
+console.log('   (Or `npm run db:push` for quick prototyping without migrations)');
+console.log('3. Set up your AI service API keys (at least one required)');
+console.log('4. Configure OAuth providers (optional)');
+console.log('5. Run `npm run dev` to start the development server');
 console.log('\nFor detailed setup instructions, see README.md');

@@ -13,8 +13,6 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
 import { Resume, ResumeAnalysis } from '@/types'
-import { extractTextFromFile, validateFileType, validateFileSize, getFileTypeIcon } from '@/lib/file-utils'
-import { Resume, ResumeAnalysis } from '@/types' // Assuming these types are defined
 import { validateFileType, validateFileSize, getFileTypeIcon } from '@/lib/file-utils'
 import { getATSScoreColor, formatFileSize } from '@/lib/utils'
 import toast from 'react-hot-toast'
@@ -71,10 +69,6 @@ export default function ResumeAssistant() {
           continue
         }
 
-        const result = await extractTextFromFile(file)
-        
-        if (!result.success) {
-          toast.error(`${file.name}: ${result.error}`)
         // Move text extraction to the server
         const extractFormData = new FormData()
         extractFormData.append('file', file)
@@ -95,10 +89,7 @@ export default function ResumeAssistant() {
         // Upload file to server
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('extractedText', result.text || '')
-        if (extractedText) {
-          formData.append('extractedText', extractedText)
-        }
+        formData.append('extractedText', extractedText)
 
         const response = await fetch('/api/resume/upload', {
           method: 'POST',

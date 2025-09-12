@@ -39,9 +39,9 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
         jobUrl: job.jobUrl || '',
         location: job.location || '',
         salary: job.salary || '',
-        expectedInterviewDate: job.expectedInterviewDate 
-          ? formatDate(new Date(job.expectedInterviewDate), 'YYYY-MM-DD')
-          : '',
+        expectedInterviewDate: job.expectedInterviewDate
+          ? new Date(job.expectedInterviewDate).toISOString().split('T')[0]
+          : "",
         expectedInterviewTime: job.expectedInterviewTime || '',
       })
       setSyncToCalendar(job.calendarSynced || false)

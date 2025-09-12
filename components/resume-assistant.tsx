@@ -17,6 +17,8 @@ import { validateFileType, validateFileSize, getFileTypeIcon } from '@/lib/file-
 import { getATSScoreColor, formatFileSize } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
+const MAX_FILE_SIZE = 10485760 // 10MB
+
 export default function ResumeAssistant() {
   const [resumes, setResumes] = useState<Resume[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -65,7 +67,7 @@ export default function ResumeAssistant() {
         }
 
         if (!validateFileSize(file)) {
-          toast.error(`${file.name}: File size exceeds limit of ${formatFileSize(parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE || '10485760'))}`)
+          toast.error(`${file.name}: File size exceeds limit of ${formatFileSize(MAX_FILE_SIZE)}`)
           continue
         }
 

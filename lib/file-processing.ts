@@ -11,7 +11,7 @@ export interface FileUploadResult {
 }
 
 export async function extractTextFromFile(file: File): Promise<FileUploadResult> {
-  const maxSize = parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE || '10485760') // 10MB
+  const maxSize = 10485760 // 10MB
   const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword']
   
   if (file.size > maxSize) {

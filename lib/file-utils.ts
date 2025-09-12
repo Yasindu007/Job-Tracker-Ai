@@ -14,7 +14,7 @@ export function validateFileType(file: File): boolean {
 }
 
 export function validateFileSize(file: File): boolean {
-  const maxSize = parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE || '10485760') // 10MB
+  const maxSize = 10485760 // 10MB
   return file.size <= maxSize
 }
 

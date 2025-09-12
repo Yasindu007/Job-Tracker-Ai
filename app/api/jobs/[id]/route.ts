@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { JobStatus } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -82,33 +82,33 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    Fill in your environment variables:
    ```env
    # Database
-   DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+   DATABASE_URL="postgresql://user:password@host:port/db"
    # For cloud databases (Supabase, Neon, etc.), you often need to add ?sslmode=require
    # DATABASE_URL="postgresql://user:password@host:port/db?sslmode=require"
    
    # NextAuth.js (Authentication)
    # Generate a secret: `openssl rand -base64 32`
    NEXTAUTH_URL="http://localhost:3000"
-   NEXTAUTH_SECRET="your-secret-key-here"
+   NEXTAUTH_SECRET="YOUR_NEXTAUTH_SECRET"
    
    # OAuth Providers (add credentials for providers you want to enable)
-   GOOGLE_CLIENT_ID="your-google-client-id"
-   GOOGLE_CLIENT_SECRET="your-google-client-secret"
-   GITHUB_CLIENT_ID="your-github-client-id"
-   GITHUB_CLIENT_SECRET="your-github-client-secret"
+   GOOGLE_CLIENT_ID="YOUR_GOOGLE_CLIENT_ID"
+   GOOGLE_CLIENT_SECRET="YOUR_GOOGLE_CLIENT_SECRET"
+   GITHUB_CLIENT_ID="YOUR_GITHUB_CLIENT_ID"
+   GITHUB_CLIENT_SECRET="YOUR_GITHUB_CLIENT_SECRET"
    
    # Email Configuration (for email/password sign-in verification)
    # For Gmail, you must generate an "App Password"
-   EMAIL_SERVER_HOST="your-smtp-host"
+   EMAIL_SERVER_HOST="YOUR_SMTP_HOST"
    EMAIL_SERVER_PORT=587
-   EMAIL_SERVER_USER="your-email@gmail.com"
-   EMAIL_SERVER_PASSWORD="your-app-password"
-   EMAIL_FROM="your-email@gmail.com"
+   EMAIL_SERVER_USER="YOUR_EMAIL_USER"
+   EMAIL_SERVER_PASSWORD="YOUR_EMAIL_PASSWORD"
+   EMAIL_FROM="YOUR_EMAIL_FROM"
    
    # AI Services (at least one required)
-   HUGGINGFACE_API_KEY="your-huggingface-api-key"
-   TOGETHER_API_KEY="your-together-api-key"
-   OPENAI_API_KEY="your-openai-api-key"
+   HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_API_KEY"
+   TOGETHER_API_KEY="YOUR_TOGETHER_AI_KEY"
+   OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
    
    # AI Configuration
    AI_PROVIDER="huggingface" # huggingface, together, openai, ollama
@@ -192,8 +192,8 @@ A comprehensive full-stack platform that helps job seekers track applications, e
 5. Add authorized redirect URI: `http://localhost:3000/api/calendar/callback/google`
 6. Add to `.env.local`:
    ```env
-   GOOGLE_CALENDAR_CLIENT_ID="your-client-id"
-   GOOGLE_CALENDAR_CLIENT_SECRET="your-client-secret"
+   GOOGLE_CALENDAR_CLIENT_ID="YOUR_GOOGLE_CALENDAR_CLIENT_ID"
+   GOOGLE_CALENDAR_CLIENT_SECRET="YOUR_GOOGLE_CALENDAR_CLIENT_SECRET"
    ```
 
 ## Project Structure

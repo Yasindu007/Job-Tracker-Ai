@@ -82,7 +82,7 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    Fill in your environment variables:
    ```env
    # Database
-   DATABASE_URL="postgresql://username:password@localhost:5432/job_tracker"
+   DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
    # For cloud databases (Supabase, Neon, etc.), you often need to add ?sslmode=require
    # DATABASE_URL="postgresql://user:password@host:port/db?sslmode=require"
    

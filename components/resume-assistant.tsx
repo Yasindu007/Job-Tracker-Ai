@@ -297,7 +297,7 @@ export default function ResumeAssistant() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          {resume.atsScore !== null && (
+                          {typeof resume.atsScore === 'number' && (
                             <span className={`text-sm font-medium ${getATSScoreColor(resume.atsScore)}`}>
                               ATS: {resume.atsScore}%
                             </span>

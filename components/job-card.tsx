@@ -8,10 +8,10 @@ import {
   CalendarIcon,
   MapPinIcon,
   CurrencyDollarIcon,
-  ExternalLinkIcon,
+  ArrowTopRightOnSquareIcon,
   ChartBarIcon,
   CloudIcon,
-  CloudSlashIcon
+  CloudArrowDownIcon
 } from '@heroicons/react/24/outline'
 import { Job, JobStatus } from '@/types'
 import { formatDate, getJobStatusColor, getJobFitScoreColor } from '@/lib/utils'
@@ -190,7 +190,7 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
                 className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                 title="View job posting"
               >
-                <ExternalLinkIcon className="h-5 w-5" />
+                <ArrowTopRightOnSquareIcon className="h-5 w-5" />
               </a>
             )}
             
@@ -208,7 +208,7 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
                 {isSyncing ? (
                   <div className="spinner" style={{ width: '1.25rem', height: '1.25rem' }}></div>
                 ) : job.calendarSynced ? (
-                  <CloudSlashIcon className="h-5 w-5" />
+                  <CloudArrowDownIcon className="h-5 w-5" />
                 ) : (
                   <CloudIcon className="h-5 w-5" />
                 )}

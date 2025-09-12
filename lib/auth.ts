@@ -123,7 +123,7 @@ export async function createVerificationCode(email: string) {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
 
   await prisma.verificationCode.upsert({
-    where: { email },
+    where: { email_code: { email, code } },
     update: { code, expiresAt },
     create: { email, code, expiresAt },
   })
@@ -134,7 +134,7 @@ export async function createVerificationCode(email: string) {
 
 export async function verifyEmailCode(email: string, code: string): Promise<boolean> {
   const verificationCode = await prisma.verificationCode.findUnique({
-    where: { email },
+    where: { email_code: { email, code } },
   })
 
   if (!verificationCode || verificationCode.code !== code) {
@@ -147,7 +147,7 @@ export async function verifyEmailCode(email: string, code: string): Promise<bool
 
   // Delete the verification code after successful verification
   await prisma.verificationCode.delete({
-    where: { email },
+    where: { email_code: { email, code } },
   })
 
   return true

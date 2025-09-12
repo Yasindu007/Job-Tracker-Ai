@@ -56,13 +56,13 @@ export default function LandingPage() {
             </div>
             <div className="flex items-center space-x-4">
               <Link
-                href="/auth/signin"
+                href="/auth/login"
                 className="text-gray-700 hover:text-blue-600 font-medium"
               >
                 Sign In
               </Link>
               <Link
-                href="/auth/signup"
+                href="/auth/register"
                 className="btn btn-primary btn-md"
               >
                 Get Started
@@ -101,7 +101,7 @@ export default function LandingPage() {
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
               <Link
-                href="/auth/signup"
+                href="/auth/register"
                 className="btn btn-primary btn-lg inline-flex items-center"
               >
                 Start Free Trial
@@ -220,7 +220,7 @@ export default function LandingPage() {
             Join thousands of job seekers who have successfully landed their dream jobs with our AI-powered platform.
           </p>
           <Link
-            href="/auth/signup"
+            href="/auth/register"
             className="btn bg-white text-blue-600 hover:bg-gray-100 btn-lg inline-flex items-center"
           >
             Get Started Today

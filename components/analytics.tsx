@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
-  ChartBarIcon,
-  BriefcaseIcon,
-  DocumentTextIcon,
+  ChartBarIcon, 
+  BriefcaseIcon, 
   CalendarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline'
 import { Job, JobStatus } from '@/types'
 
@@ -112,7 +110,7 @@ export default function Analytics() {
           >
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
-                <TrendingUpIcon className="h-6 w-6 text-green-600" />
+                <ArrowTrendingUpIcon className="h-6 w-6 text-green-600" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Success Rate</p>

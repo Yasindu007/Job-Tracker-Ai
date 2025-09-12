@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { 
@@ -20,6 +20,8 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -79,6 +81,14 @@ export default function SignInPage() {
         </div>
 
         <div className="bg-white py-8 px-6 shadow-xl rounded-lg">
+          {error === 'OAuthAccountNotLinked' && (
+            <div className="mb-6 rounded-md bg-red-50 p-4 text-sm text-red-700" role="alert">
+              <p className="font-bold">This email is already in use.</p>
+              <p>
+                Please sign in with the original method you used for this email address.
+              </p>
+            </div>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">

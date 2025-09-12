@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       location: job.location || undefined,
     }
 
-    let eventId: string
+    let eventId: string | undefined
 
     if (action === 'create') {
       eventId = await calendarService.createEvent(accessToken, calendarEvent)

@@ -99,7 +99,7 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    
    # Email Configuration (for email/password sign-in verification)
    # For Gmail, you must generate an "App Password"
-   EMAIL_SERVER_HOST="smtp.gmail.com"
+   EMAIL_SERVER_HOST="your-smtp-host"
    EMAIL_SERVER_PORT=587
    EMAIL_SERVER_USER="your-email@gmail.com"
    EMAIL_SERVER_PASSWORD="your-app-password"

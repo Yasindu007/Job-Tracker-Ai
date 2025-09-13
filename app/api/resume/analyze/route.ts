@@ -49,11 +49,6 @@ export async function POST(request: NextRequest) {
       where: {
         id: resumeId, // Prisma v4 requires a single unique identifier for updates
       },
-      data: {
-        atsScore: analysis.atsScore,
-        enhancementSuggestions: JSON.stringify(analysis),
-      },
-    })
 
     return NextResponse.json(analysis)
   } catch (error) {

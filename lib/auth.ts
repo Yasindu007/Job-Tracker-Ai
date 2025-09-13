@@ -9,6 +9,12 @@ import TwitterProvider from 'next-auth/providers/twitter'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
+// Temporary fix for Netlify deployment. 
+// Recommended: Set NEXTAUTH_URL in Netlify environment variables.
+if (process.env.NODE_ENV === 'production') {
+  process.env.NEXTAUTH_URL = 'https://job-tracker-ai.netlify.app';
+}
+
 const providers = []
 
 // Email Provider

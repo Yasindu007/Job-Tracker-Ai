@@ -134,4 +134,13 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth/login',
     verifyRequest: '/auth/verify-request', // (Optional) For magic link sign-in
   },
+  events: {
+    async signIn(message) { console.log('signIn', message) },
+    async signOut(message) { console.log('signOut', message) },
+    async createUser(message) { console.log('createUser', message) },
+    async updateUser(message) { console.log('updateUser', message) },
+    async linkAccount(message) { console.log('linkAccount', message) },
+    async session(message) { console.log('session', message) },
+    async error(message) { console.log('error', message) },
+  },
 }

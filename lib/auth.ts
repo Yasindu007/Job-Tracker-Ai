@@ -141,6 +141,5 @@ export const authOptions: NextAuthOptions = {
     async updateUser(message) { console.log('updateUser', message) },
     async linkAccount(message) { console.log('linkAccount', message) },
     async session(message) { console.log('session', message) },
-    async error(message) { console.log('error', message) },
   },
 }

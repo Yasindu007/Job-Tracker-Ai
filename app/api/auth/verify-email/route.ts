@@ -1,34 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyEmailCode } from '@/lib/auth'
+import bcrypt from 'bcryptjs'
+import { prisma } from '@/lib/prisma'
+import { z } from 'zod'
+
+const registerSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+})
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, code } = await request.json()
+    const body = await request.json()
+    const validation = registerSchema.safeParse(body)
 
-    if (!email || !code) {
-      return NextResponse.json(
-        { error: 'Email and verification code are required' },
-        { status: 400 }
-      )
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error.errors[0].message }, { status: 400 })
     }
 
-    const isValid = await verifyEmailCode(email, code)
+    const { name, email, password } = validation.data
 
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid or expired verification code' },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json({
-      message: 'Email verified successfully',
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
     })
+
+    if (existingUser) {
+      return NextResponse.json({ error: 'User with this email already exists' }, { status: 409 })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    })
+
+    return NextResponse.json({ message: 'User created successfully', userId: user.id }, { status: 201 })
   } catch (error) {
-    console.error('Email verification error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Registration error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

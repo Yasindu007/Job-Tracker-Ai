@@ -74,9 +74,7 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: '/auth/verify-request',
   },
   events: {
-    async error(message) {
-      console.error('NEXTAUTH_ERROR_EVENT', message)
-    },
+    
     async signIn(message) {
       console.log('NEXTAUTH_SIGN_IN_EVENT', message)
     },

@@ -97,10 +97,12 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    GITHUB_CLIENT_ID="YOUR_GITHUB_CLIENT_ID"
    GITHUB_CLIENT_SECRET="YOUR_GITHUB_CLIENT_SECRET"
    
+
+   # Email Configuration (Server-side only)
    # Email Configuration (for email/password sign-in verification)
    # For Gmail, you must generate an "App Password"
    EMAIL_SERVER_HOST="YOUR_SMTP_HOST"
-   EMAIL_SERVER_PORT=587
+   EMAIL_SERVER_PORT=five_eight_seven
    EMAIL_SERVER_USER="YOUR_EMAIL_USER"
    EMAIL_SERVER_PASSWORD="YOUR_EMAIL_PASSWORD"
    EMAIL_FROM="YOUR_EMAIL_FROM"

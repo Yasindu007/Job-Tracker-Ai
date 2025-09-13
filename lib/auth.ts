@@ -94,28 +94,7 @@ export async function sendVerificationEmail(email: string, code: string) {
   
   // In production, you would send an actual email here
   // Example with nodemailer:
-  /*
-  const transporter = nodemailer.createTransporter({
-    host: process.env.EMAIL_SERVER_HOST,
-    port: parseInt(process.env.EMAIL_SERVER_PORT || '587'),
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_SERVER_USER,
-      pass: process.env.EMAIL_SERVER_PASSWORD,
-    },
-  })
-
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: email,
-    subject: 'Verify your email address',
-    html: `
-      <h1>Verify your email address</h1>
-      <p>Your verification code is: <strong>${code}</strong></p>
-      <p>This code will expire in 10 minutes.</p>
-    `,
-  })
-  */
+  
 }
 
 export async function createVerificationCode(email: string) {

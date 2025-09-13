@@ -23,6 +23,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // First, find the resume and verify ownership
+    const resume = await prisma.resume.findUnique({
+      where: {
+        id: resumeId,
+      },
+    });
+
+    if (!resume || resume.userId !== session.user.id) {
+      return NextResponse.json({ error: 'Resume not found or permission denied' }, { status: 404 });
+    }
+
     // Get user profile for job role context
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
@@ -36,8 +47,7 @@ export async function POST(request: NextRequest) {
     // Update resume with analysis results
     const updatedResume = await prisma.resume.update({
       where: {
-        id: resumeId,
-        userId: session.user.id, // Ensure user owns the resume
+        id: resumeId, // Prisma v4 requires a single unique identifier for updates
       },
       data: {
         atsScore: analysis.atsScore,

@@ -126,7 +126,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/login',
-    signUp: '/auth/signup',
     verifyRequest: '/auth/verify-request', // (Optional) For magic link sign-in
   },
 }

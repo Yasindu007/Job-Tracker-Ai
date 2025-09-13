@@ -2,15 +2,33 @@ import { NextAuthOptions } from 'next-auth'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
+import EmailProvider from 'next-auth/providers/email'
 import { prisma } from '@/lib/prisma'
 
-// Temporary fix for Netlify deployment. 
-// Recommended: Set NEXTAUTH_URL in Netlify environment variables.
-if (process.env.NODE_ENV === 'production') {
-  process.env.NEXTAUTH_URL = 'https://job-tracker-ai.netlify.app';
-}
-
 const providers = []
+
+// Email Provider for magic link login (SMTP method)
+if (
+  process.env.EMAIL_SERVER_HOST &&
+  process.env.EMAIL_SERVER_PORT &&
+  process.env.EMAIL_SERVER_USER &&
+  process.env.EMAIL_SERVER_PASSWORD &&
+  process.env.EMAIL_FROM
+) {
+  providers.push(
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    })
+  )
+}
 
 // OAuth Providers
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
@@ -53,6 +71,14 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/login',
-    verifyRequest: '/auth/verify-request', // (Optional) For magic link sign-in
+    verifyRequest: '/auth/verify-request',
   },
+  events: {
+    async error(message) {
+      console.error('NEXTAUTH_ERROR_EVENT', message)
+    },
+    async signIn(message) {
+      console.log('NEXTAUTH_SIGN_IN_EVENT', message)
+    },
+  }
 }

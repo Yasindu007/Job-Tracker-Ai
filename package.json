@@ -20,10 +20,12 @@
     "@prisma/client": "^6.16.1",
     "autoprefixer": "^10.0.1",
     "axios": "^1.6.2",
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^17.2.2",
     "framer-motion": "^10.16.16",
     "jose": "^5.2.0",
     "lucide-react": "^0.294.0",
@@ -44,6 +46,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.14",

@@ -18,7 +18,7 @@ const providers: any[] = [
       password: {  label: "Password", type: "password" }
     },
     async authorize(credentials, req) {
-      const ip = req.headers?.['x-forwarded-for'] || req.socket?.remoteAddress
+      const ip = req.headers?.['x-forwarded-for'] || '127.0.0.1'
       const { success } = await ratelimit.limit(ip)
       if (!success) {
         throw new Error('Too many requests')

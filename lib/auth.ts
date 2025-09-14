@@ -8,6 +8,7 @@ import EmailProvider from 'next-auth/providers/email'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import * as bcrypt from 'bcryptjs'
+import { ratelimit } from '@/lib/ratelimit'
 
 const providers: any[] = [
   CredentialsProvider({
@@ -16,7 +17,13 @@ const providers: any[] = [
       email: { label: "Email", type: "email" },
       password: {  label: "Password", type: "password" }
     },
-    async authorize(credentials) {
+    async authorize(credentials, req) {
+      const ip = req.headers?.['x-forwarded-for'] || req.socket?.remoteAddress
+      const { success } = await ratelimit.limit(ip)
+      if (!success) {
+        throw new Error('Too many requests')
+      }
+
       if (!credentials?.email || !credentials.password) {
         return null
       }
@@ -27,6 +34,10 @@ const providers: any[] = [
 
       if (!user || !user.password) {
         return null
+      }
+
+      if (!user.emailVerified) {
+        throw new Error('Email not verified')
       }
 
       const isValid = await bcrypt.compare(credentials.password, user.password)

@@ -13,9 +13,12 @@ import {
   UserIcon,
   Bars3Icon,
   XMarkIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  SunIcon,
+  MoonIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
+import { useTheme } from 'next-themes';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: BriefcaseIcon },
@@ -35,6 +38,7 @@ interface NavigationProps {
 export default function Navigation({ user }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const { theme, setTheme } = useTheme()
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })
@@ -125,8 +129,19 @@ export default function Navigation({ user }: NavigationProps) {
                   </div>
                 </div>
                 <button
-                  onClick={handleSignOut}
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  {theme === 'dark' ? (
+                    <SunIcon className="h-5 w-5 mr-3" />
+                  ) : (
+                    <MoonIcon className="h-5 w-5 mr-3" />
+                  )}
+                  Toggle Theme
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
                 >
                   <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
                   Sign out
@@ -189,8 +204,19 @@ export default function Navigation({ user }: NavigationProps) {
               </div>
             </div>
             <button
-              onClick={handleSignOut}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              {theme === 'dark' ? (
+                <SunIcon className="h-5 w-5 mr-3" />
+              ) : (
+                <MoonIcon className="h-5 w-5 mr-3" />
+              )}
+              Toggle Theme
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
               Sign out

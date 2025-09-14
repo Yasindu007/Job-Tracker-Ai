@@ -262,7 +262,7 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-3">
+            <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 onClick={() => handleOAuthSignIn('google')}
                 disabled={isLoading}

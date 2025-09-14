@@ -1,31 +1,70 @@
 
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 
 export default function VerifyEmailPage() {
-  // This is a placeholder to fix the build error.
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
-  const [message, setMessage] = useState('Verifying your email...');
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
+  const [status, setStatus] = useState('verifying')
+  const router = useRouter()
 
   useEffect(() => {
     if (token) {
-      // Here you would typically make an API call to your backend to verify the token
-      // For this placeholder, we'll just simulate a success or failure
-      setTimeout(() => {
-        setMessage('Email successfully verified! (Placeholder)');
-      }, 2000);
-    } else {
-      setMessage('No verification token found.');
+      fetch(`/api/auth/verify-email?token=${token}`)
+        .then(res => {
+          if (res.ok) {
+            setStatus('success')
+            setTimeout(() => router.push('/auth/login'), 3000)
+          } else {
+            setStatus('error')
+          }
+        })
+        .catch(() => setStatus('error'))
     }
-  }, [token]);
+  }, [token, router])
 
   return (
-    <div>
-      <h1>Email Verification</h1>
-      <p>{message}</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-md w-full space-y-8 text-center"
+      >
+        {status === 'verifying' && (
+          <div>
+            <h2 className="mt-6 text-3xl font-bold text-gray-900">Verifying your email...</h2>
+            <div className="mt-4 flex justify-center">
+              <div className="spinner"></div>
+            </div>
+          </div>
+        )}
+        {status === 'success' && (
+          <div>
+            <CheckCircleIcon className="h-12 w-12 text-green-500 mx-auto" />
+            <h2 className="mt-6 text-3xl font-bold text-gray-900">Email Verified!</h2>
+            <p className="mt-2 text-sm text-gray-600">You will be redirected to the login page shortly.</p>
+          </div>
+        )}
+        {status === 'error' && (
+          <div>
+            <XCircleIcon className="h-12 w-12 text-red-500 mx-auto" />
+            <h2 className="mt-6 text-3xl font-bold text-gray-900">Verification Failed</h2>
+            <p className="mt-2 text-sm text-gray-600">The verification link is invalid or has expired.</p>
+            <div className="mt-6">
+              <Link href="/auth/login" className="btn btn-primary">
+                Back to Login
+              </Link>
+            </div>
+          </div>
+        )}
+      </motion.div>
     </div>
-  );
+  )
 }
+

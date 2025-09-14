@@ -13,6 +13,7 @@ import {
   BriefcaseIcon
 } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
+import zxcvbn from 'zxcvbn';
 
 export default function RegisterPage() {
   const [name, setName] = useState('')
@@ -22,12 +23,17 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [passwordStrength, setPasswordStrength] = useState(0)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
       toast.error('Passwords do not match')
+      return
+    }
+    if (passwordStrength < 2) {
+      toast.error('Password is too weak')
       return
     }
     setIsLoading(true)
@@ -44,7 +50,7 @@ export default function RegisterPage() {
       const data = await response.json()
 
       if (response.ok) {
-        toast.success('Registration successful! Please sign in.')
+        toast.success('Registration successful! Please check your email to verify your account.')
         router.push('/auth/login')
       } else {
         toast.error(data.message || 'Registration failed.')
@@ -140,7 +146,11 @@ export default function RegisterPage() {
                   autoComplete="new-password"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    const strength = zxcvbn(e.target.value);
+                    setPasswordStrength(strength.score);
+                  }}
                   className="input pl-10 pr-10"
                   placeholder="Create a password"
                 />
@@ -156,6 +166,25 @@ export default function RegisterPage() {
                   )}
                 </button>
               </div>
+              {password && (
+                <div className="mt-2 flex items-center">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      className={`h-2.5 rounded-full ${
+                        passwordStrength === 0 ? 'bg-red-500' :
+                        passwordStrength === 1 ? 'bg-orange-500' :
+                        passwordStrength === 2 ? 'bg-yellow-500' :
+                        passwordStrength === 3 ? 'bg-blue-500' :
+                        'bg-green-500'
+                      }`}
+                      style={{ width: `${(passwordStrength + 1) * 20}%` }}
+                    ></div>
+                  </div>
+                  <span className="ml-3 text-sm font-medium text-gray-900">
+                    {['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'][passwordStrength]}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div>

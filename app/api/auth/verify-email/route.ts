@@ -1,17 +1,37 @@
-
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-export async function GET(request: NextRequest) {
-  // This is a placeholder to fix the build error.
-  // The actual logic for verifying an email token should be implemented here.
-  const { searchParams } = new URL(request.url);
-  const token = searchParams.get('token');
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const token = searchParams.get('token');
 
-  if (token) {
-    // TODO: Add logic to validate the token and update the user's verification status in the database.
-    return NextResponse.json({ success: true, message: 'Email verified successfully (placeholder).' });
-  } else {
-    return NextResponse.json({ success: false, message: 'Verification token is missing.' }, { status: 400 });
+    if (!token) {
+      return NextResponse.json({ message: 'Token not found' }, { status: 400 });
+    }
+
+    const verificationToken = await prisma.verificationToken.findFirst({
+      where: { 
+        token: token,
+        expiresAt: { gt: new Date() }
+      },
+    });
+
+    if (!verificationToken) {
+      return NextResponse.json({ message: 'Invalid or expired token' }, { status: 400 });
+    }
+
+    await prisma.user.update({
+      where: { email: verificationToken.identifier },
+      data: { emailVerified: new Date() },
+    });
+
+    await prisma.verificationToken.delete({ where: { id: verificationToken.id } });
+
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/auth/login?verified=true`);
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: 'An error occurred.' }, { status: 500 });
   }
 }

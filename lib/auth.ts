@@ -9,7 +9,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import * as bcrypt from 'bcrypt'
 
-const providers = [
+const providers: any[] = [
   CredentialsProvider({
     name: 'Credentials',
     credentials: {

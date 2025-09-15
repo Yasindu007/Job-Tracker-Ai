@@ -18,33 +18,38 @@ const providers: any[] = [
       password: {  label: "Password", type: "password" }
     },
     async authorize(credentials, req) {
-      const ip = req.headers?.['x-forwarded-for'] || '127.0.0.1'
-      const { success } = await ratelimit.limit(ip)
-      if (!success) {
-        throw new Error('Too many requests')
-      }
+      try {
+        const ip = req.headers?.['x-forwarded-for'] || '127.0.0.1'
+        const { success } = await ratelimit.limit(ip)
+        if (!success) {
+          throw new Error('Too many requests')
+        }
 
-      if (!credentials?.email || !credentials.password) {
-        return null
-      }
+        if (!credentials?.email || !credentials.password) {
+          return null
+        }
 
-      const user = await prisma.user.findUnique({
-        where: { email: credentials.email }
-      })
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email }
+        })
 
-      if (!user || !user.password) {
-        return null
-      }
+        if (!user || !user.password) {
+          return null
+        }
 
-      if (!user.emailVerified) {
-        throw new Error('Email not verified')
-      }
+        if (!user.emailVerified) {
+          throw new Error('Email not verified')
+        }
 
-      const isValid = await bcrypt.compare(credentials.password, user.password)
+        const isValid = await bcrypt.compare(credentials.password, user.password)
 
-      if (isValid) {
-        return user
-      } else {
+        if (isValid) {
+          return user
+        } else {
+          return null
+        }
+      } catch (error) {
+        console.error("CredentialsProvider Error:", error)
         return null
       }
     }
@@ -135,11 +140,29 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/login',
     verifyRequest: '/auth/verify-request',
+    error: '/auth/error',
   },
   events: {
-    
     async signIn(message) {
       console.log('NEXTAUTH_SIGN_IN_EVENT', message)
     },
+    async signOut(message) {
+      console.log('NEXTAUTH_SIGN_OUT_EVENT', message)
+    },
+    async createUser(message) {
+      console.log('NEXTAUTH_CREATE_USER_EVENT', message)
+    },
+    async updateUser(message) {
+      console.log('NEXTAUTH_UPDATE_USER_EVENT', message)
+    },
+    async linkAccount(message) {
+      console.log('NEXTAUTH_LINK_ACCOUNT_EVENT', message)
+    },
+    async session(message) {
+      console.log('NEXTAUTH_SESSION_EVENT', message)
+    },
+    async error(message) {
+      console.error('NEXTAUTH_ERROR_EVENT', message)
+    }
   }
 }

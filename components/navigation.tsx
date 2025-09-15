@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
 import { motion } from 'framer-motion'
 import { 
   BriefcaseIcon, 
@@ -19,6 +18,8 @@ import {
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes';
+import { auth } from '@/stack';
+import { User } from '@stackframe/stack';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: BriefcaseIcon },
@@ -28,21 +29,13 @@ const navigation = [
 ]
 
 interface NavigationProps {
-  user?: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  }
+  user?: User | null
 }
 
 export default function Navigation({ user }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
-
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' })
-  }
 
   return (
     <>
@@ -109,11 +102,11 @@ export default function Navigation({ user }: NavigationProps) {
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <div className="flex items-center mb-4">
                   <div className="flex-shrink-0">
-                    {user?.image ? (
+                    {user?.photoUrl ? (
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={user.image}
-                        alt={user.name || 'User'}
+                        src={user.photoUrl}
+                        alt={user.displayName || 'User'}
                       />
                     ) : (
                       <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
@@ -123,7 +116,7 @@ export default function Navigation({ user }: NavigationProps) {
                   </div>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">
-                      {user?.name || 'User'}
+                      {user?.displayName || 'User'}
                     </p>
                     <p className="text-xs text-gray-500">{user?.email}</p>
                   </div>
@@ -139,13 +132,14 @@ export default function Navigation({ user }: NavigationProps) {
                   )}
                   Toggle Theme
                 </button>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
-                >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
-                  Sign out
-                </button>
+                <auth.SignOut>
+                  <button
+                    className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
+                  >
+                    <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
+                    Sign out
+                  </button>
+                </auth.SignOut>
               </div>
             </div>
           </motion.div>
@@ -184,11 +178,11 @@ export default function Navigation({ user }: NavigationProps) {
           <div className="p-4 border-t border-gray-200">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                {user?.image ? (
+                {user?.photoUrl ? (
                   <img
                     className="h-8 w-8 rounded-full"
-                    src={user.image}
-                    alt={user.name || 'User'}
+                    src={user.photoUrl}
+                    alt={user.displayName || 'User'}
                   />
                 ) : (
                   <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
@@ -198,7 +192,7 @@ export default function Navigation({ user }: NavigationProps) {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">
-                  {user?.name || 'User'}
+                  {user?.displayName || 'User'}
                 </p>
                 <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
@@ -214,13 +208,14 @@ export default function Navigation({ user }: NavigationProps) {
               )}
               Toggle Theme
             </button>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
-            >
-              <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
-              Sign out
-            </button>
+            <auth.SignOut>
+              <button
+                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
+              >
+                <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
+                Sign out
+              </button>
+            </auth.SignOut>
           </div>
         </div>
       </div>

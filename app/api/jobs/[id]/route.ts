@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { JobStatus } from '@/types'
 
@@ -11,9 +10,9 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -41,7 +40,7 @@ export async function PUT(
     const existingJob = await prisma.job.findFirst({
       where: {
         id: params.id,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 
@@ -85,9 +84,9 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -95,7 +94,7 @@ export async function DELETE(
     const existingJob = await prisma.job.findFirst({
       where: {
         id: params.id,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 

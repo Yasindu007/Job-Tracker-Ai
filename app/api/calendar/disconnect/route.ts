@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
     // Deactivate calendar integration
     await prisma.calendarIntegration.updateMany({
       where: {
-        userId: session.user.id,
+        userId: user.id,
         provider,
       },
       data: {
@@ -37,7 +36,7 @@ export async function POST(request: NextRequest) {
     // Remove calendar sync from all jobs
     await prisma.job.updateMany({
       where: {
-        userId: session.user.id,
+        userId: user.id,
         calendarSynced: true,
       },
       data: {

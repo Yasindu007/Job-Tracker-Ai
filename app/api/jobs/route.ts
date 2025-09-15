@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { JobStatus } from '@/types'
 
@@ -8,15 +7,15 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const jobs = await prisma.job.findMany({
       where: {
-        userId: session.user.id,
+        userId: user.id,
       },
       orderBy: {
         dateApplied: 'desc',
@@ -35,9 +34,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -72,7 +71,7 @@ export async function POST(request: NextRequest) {
         salary,
         expectedInterviewDate: expectedInterviewDate ? new Date(expectedInterviewDate) : null,
         expectedInterviewTime,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 

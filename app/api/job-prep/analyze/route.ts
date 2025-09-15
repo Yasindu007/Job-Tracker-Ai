@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
 
@@ -8,9 +7,9 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -24,8 +23,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's skills and job role
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+    const userProfile = await prisma.user.findUnique({
+      where: { id: user.id },
       select: { skills: true, expectedJobRole: true },
     })
 
@@ -33,8 +32,8 @@ export async function POST(request: NextRequest) {
     const aiService = createAIService()
     const prepResults = await aiService.analyzeJobPosting(
       jobPostingText,
-      user?.skills || [],
-      user?.expectedJobRole || undefined
+      userProfile?.skills || [],
+      userProfile?.expectedJobRole || undefined
     )
 
     // Save analysis to database for future reference
@@ -45,7 +44,7 @@ export async function POST(request: NextRequest) {
         resumeSuggestions: JSON.stringify(prepResults.resumeSuggestions),
         interviewQuestions: JSON.stringify(prepResults.interviewQuestions),
         skillGaps: JSON.stringify(prepResults.skillGaps),
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 

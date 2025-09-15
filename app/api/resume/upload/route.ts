@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
@@ -8,9 +7,9 @@ import { generateUniqueFileName } from '@/lib/file-utils'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -44,7 +43,7 @@ export async function POST(request: NextRequest) {
         originalFileName: file.name,
         filePath: filePath,
         extractedText: extractedText || null,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 

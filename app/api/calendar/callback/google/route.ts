@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { createGoogleCalendarService } from '@/lib/calendar-service'
 
@@ -8,9 +7,9 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -27,7 +26,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/dashboard?calendar_error=no_code`)
     }
 
-    if (state !== session.user.id) {
+    if (state !== user.id) {
       return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/dashboard?calendar_error=invalid_state`)
     }
 
@@ -38,7 +37,7 @@ export async function GET(request: NextRequest) {
     await prisma.calendarIntegration.upsert({
       where: {
         userId_provider: {
-          userId: session.user.id,
+          userId: user.id,
           provider: 'google',
         },
       },
@@ -50,7 +49,7 @@ export async function GET(request: NextRequest) {
         updatedAt: new Date(),
       },
       create: {
-        userId: session.user.id,
+        userId: user.id,
         provider: 'google',
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,

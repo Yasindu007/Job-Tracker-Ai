@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useUser } from '@/stack'
 import { motion } from 'framer-motion'
 import { 
   PlusIcon, 
@@ -23,7 +23,7 @@ import { Job, JobStatus } from '@/types'
 import toast from 'react-hot-toast'
 
 export default function Dashboard() {
-  const { data: session } = useSession()
+  const user = useUser()
   const [jobs, setJobs] = useState<Job[]>([])
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -142,7 +142,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <Navigation user={session?.user} />
+      <Navigation user={user} />
       
       {/* Header */}
       <header className="bg-white shadow-sm border-b lg:ml-64">

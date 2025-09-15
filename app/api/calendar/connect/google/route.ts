@@ -1,20 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { createGoogleCalendarService } from '@/lib/calendar-service'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const calendarService = createGoogleCalendarService()
-    const authUrl = calendarService.getAuthUrl(session.user.id)
+    const authUrl = calendarService.getAuthUrl(user.id)
 
     return NextResponse.json({ authUrl })
   } catch (error) {

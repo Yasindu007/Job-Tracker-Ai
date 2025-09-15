@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { StackProvider, StackTheme } from "@stackframe/stack";
-import { stackServerApp } from "../stack";
-import { StackProvider, StackTheme } from "@stackframe/stack";
-import { stackServerApp } from "../stack";
+import { client } from "@/stack"; // Import client from the client-side stack.ts
+import { stackServerApp } from "../stack/server"; // Corrected import path
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
@@ -23,21 +22,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}><StackProvider app={stackServerApp}><StackTheme><StackProvider app={stackServerApp}><StackTheme>
-        <Providers>
-          {children}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-            }}
-          />
-        </Providers>
-      </StackTheme></StackProvider></StackTheme></StackProvider></body>
+      <body className={inter.className}>
+        <StackProvider app={client}> {/* Use client from stack.ts */}
+          <StackTheme>
+            <Providers>
+              {children}
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#363636',
+                    color: '#fff',
+                  },
+                }}
+              />
+            </Providers>
+          </StackTheme>
+        </StackProvider>
+      </body>
     </html>
   )
 }

@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { createGoogleCalendarService } from '@/lib/calendar-service'
 import { CalendarEvent } from '@/types'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -26,7 +25,7 @@ export async function POST(request: NextRequest) {
     const job = await prisma.job.findFirst({
       where: {
         id: jobId,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 
@@ -47,7 +46,7 @@ export async function POST(request: NextRequest) {
     // Get user's Google Calendar integration
     const calendarIntegration = await prisma.calendarIntegration.findFirst({
       where: {
-        userId: session.user.id,
+        userId: user.id,
         provider: 'google',
         isActive: true,
       },

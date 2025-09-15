@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
 import { readFile } from 'fs/promises'
@@ -12,9 +11,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -22,7 +21,7 @@ export async function POST(
     const resume = await prisma.resume.findFirst({
       where: {
         id: params.id,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 
@@ -34,8 +33,8 @@ export async function POST(
     }
 
     // Get user's target job role for enhancement
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+    const userProfile = await prisma.user.findUnique({
+      where: { id: user.id },
       select: { expectedJobRole: true },
     })
 
@@ -43,7 +42,7 @@ export async function POST(
     const aiService = createAIService()
     const enhancedText = await aiService.generateResumeEnhancement(
       resume.extractedText,
-      user?.expectedJobRole || 'Software Engineer' // Default fallback
+      userProfile?.expectedJobRole || 'Software Engineer' // Default fallback
     )
 
     // Return enhanced resume as text file

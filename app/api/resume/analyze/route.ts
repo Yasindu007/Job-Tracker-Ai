@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
 
@@ -8,9 +7,9 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const user = await auth.getUser()
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -30,19 +29,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!resume || resume.userId !== session.user.id) {
+    if (!resume || resume.userId !== user.id) {
       return NextResponse.json({ error: 'Resume not found or permission denied' }, { status: 404 });
     }
 
     // Get user profile for job role context
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+    const userProfile = await prisma.user.findUnique({
+      where: { id: user.id },
       select: { expectedJobRole: true },
     })
 
     // Analyze resume with AI
     const aiService = createAIService()
-    const analysis = await aiService.analyzeResume(resumeText, user?.expectedJobRole || undefined)
+    const analysis = await aiService.analyzeResume(resumeText, userProfile?.expectedJobRole || undefined)
 
     // Update resume with analysis results
     const updatedResume = await prisma.resume.update({

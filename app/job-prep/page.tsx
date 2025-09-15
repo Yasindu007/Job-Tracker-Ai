@@ -1,8 +1,13 @@
-import { auth } from '@/stack'
 import JobPrepAssistant from '@/components/job-prep-assistant'
+import { stackServerApp } from '../../stack/server'
+import { redirect } from 'next/navigation'
 
 export default async function JobPrepPage() {
-  await auth.requireUser()
+  const user = await stackServerApp.getUser()
+
+  if (!user) {
+    redirect('/handler/sign-in')
+  }
 
   return <JobPrepAssistant />
 }

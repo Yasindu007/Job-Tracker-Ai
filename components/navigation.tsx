@@ -19,7 +19,6 @@ import {
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes';
 import { auth } from '@/stack';
-import { User } from '@stackframe/stack';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: BriefcaseIcon },
@@ -29,7 +28,7 @@ const navigation = [
 ]
 
 interface NavigationProps {
-  user?: User | null
+  user?: any | null // Changed User to any
 }
 
 export default function Navigation({ user }: NavigationProps) {
@@ -118,7 +117,7 @@ export default function Navigation({ user }: NavigationProps) {
                     <p className="text-sm font-medium text-gray-900">
                       {user?.displayName || 'User'}
                     </p>
-                    <p className="text-xs text-gray-500">{user?.email}</p>
+                    <p className="text-xs text-gray-500">{user?.primaryEmail}</p>
                   </div>
                 </div>
                 <button
@@ -132,14 +131,13 @@ export default function Navigation({ user }: NavigationProps) {
                   )}
                   Toggle Theme
                 </button>
-                <auth.SignOut>
-                  <button
-                    className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
-                  >
-                    <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
-                    Sign out
-                  </button>
-                </auth.SignOut>
+                <button
+                  onClick={() => auth.signOut({ redirectUrl: '/' })}
+                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
+                >
+                  <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
+                  Sign out
+                </button>
               </div>
             </div>
           </motion.div>
@@ -194,7 +192,7 @@ export default function Navigation({ user }: NavigationProps) {
                 <p className="text-sm font-medium text-gray-900">
                   {user?.displayName || 'User'}
                 </p>
-                <p className="text-xs text-gray-500">{user?.email}</p>
+                <p className="text-xs text-gray-500">{user?.primaryEmail}</p>
               </div>
             </div>
             <button
@@ -208,14 +206,13 @@ export default function Navigation({ user }: NavigationProps) {
               )}
               Toggle Theme
             </button>
-            <auth.SignOut>
-              <button
-                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
-              >
-                <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
-                Sign out
-              </button>
-            </auth.SignOut>
+            <button
+              onClick={() => auth.signOut({ redirectUrl: '/' })}
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
+            >
+              <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
+              Sign out
+            </button>
           </div>
         </div>
       </div>

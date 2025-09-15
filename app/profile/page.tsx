@@ -9,21 +9,17 @@ export default function ProfilePage() {
   const user = useUser()
   const router = useRouter()
 
-  if (user.isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="spinner"></div>
-      </div>
-    )
-  }
-
-  if (!user.data) {
+  if (user === null) { // If user is null, it means not logged in or still loading
     router.push('/handler/sign-in')
     return null
   }
 
+  // If we reach here, user is not null, meaning they are logged in.
+  // The user object itself represents the loaded state.
+  // There is no separate 'isLoading' property on the user object.
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -38,19 +34,18 @@ export default function ProfilePage() {
         </div>
 
         <div className="mt-8 text-center">
-          <p className="text-lg font-medium text-gray-900">Welcome, {user.data?.displayName}</p>
-          <p className="mt-2 text-sm text-gray-600">You are signed in with {user.data?.email}</p>
+          <p className="text-lg font-medium text-gray-900">Welcome, {user.displayName}</p>
+          <p className="mt-2 text-sm text-gray-600">You are signed in with {user.primaryEmail}</p>
         </div>
 
         <div className="mt-8">
-          <auth.SignOut>
-            <button
-              className="btn btn-danger btn-md w-full flex items-center justify-center"
-            >
-              <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />
-              Logout
-            </button>
-          </auth.SignOut>
+          <button
+            onClick={() => auth.signOut({ redirectUrl: '/' })}
+            className="btn btn-danger btn-md w-full flex items-center justify-center"
+          >
+            <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />
+            Logout
+          </button>
         </div>
       </motion.div>
     </div>

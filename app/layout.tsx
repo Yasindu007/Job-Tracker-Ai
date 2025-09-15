@@ -1,4 +1,8 @@
 import type { Metadata } from 'next'
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackServerApp } from "../stack";
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackServerApp } from "../stack";
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
@@ -19,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className}><StackProvider app={stackServerApp}><StackTheme><StackProvider app={stackServerApp}><StackTheme>
         <Providers>
           {children}
           <Toaster
@@ -33,7 +37,7 @@ export default function RootLayout({
             }}
           />
         </Providers>
-      </body>
+      </StackTheme></StackProvider></StackTheme></StackProvider></body>
     </html>
   )
 }

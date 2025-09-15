@@ -1,5 +1,11 @@
-import { createStack } from "@stackframe/stack";
+import { StackClientApp } from "@stackframe/stack";
 
-export const { auth, useUser, client } = createStack({
+export const client = new StackClientApp({
   serverApp: "/handler",
+  // You might need to add projectId, publishableClientKey here from your .env.local
+  // projectId: process.env.NEXT_PUBLIC_STACK_PROJECT_ID,
+  // publishableClientKey: process.env.NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY,
 });
+
+export const auth = client;
+export const useUser = client.useUser;

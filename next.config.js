@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ['lh3.googleusercontent.com', 'avatars.githubusercontent.com', 'platform-lookaside.fbsbx.com', 'pbs.twimg.com'],
-  },
-}
+  // This is a workaround for a bug in a dependency of `@stackframe/stack`.
+  // We are telling Next.js to transpile these packages to help resolve the issue.
+  transpilePackages: ['@stackframe/stack', '@stackframe/stack-ui', 'lucide-react'],
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

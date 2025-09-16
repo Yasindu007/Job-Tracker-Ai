@@ -142,7 +142,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <Navigation user={user} />
+      <Navigation />
       
       {/* Header */}
       <header className="bg-white shadow-sm border-b lg:ml-64">

@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes';
-import { useUser } from '@stackframe/stack';
+import { useUser, auth } from '@/stack';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: BriefcaseIcon },
@@ -102,10 +102,10 @@ export default function Navigation({ /* user */ }: NavigationProps) {
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <div className="flex items-center mb-4">
                   <div className="flex-shrink-0">
-                    {user?.photoUrl ? (
+                    {user?.profileImageUrl ? (
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={user.photoUrl}
+                        src={user.profileImageUrl}
                         alt={user.displayName || 'User'}
                       />
                     ) : (
@@ -133,7 +133,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                   Toggle Theme
                 </button>
                 <button
-                  onClick={() => auth.signOut({ redirectUrl: '/' })}
+                  onClick={() => user && user.signOut({ redirectUrl: '/' })}
                   className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
                 >
                   <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
@@ -177,10 +177,10 @@ export default function Navigation({ /* user */ }: NavigationProps) {
           <div className="p-4 border-t border-gray-200">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                {user?.photoUrl ? (
+                {user?.profileImageUrl ? (
                   <img
                     className="h-8 w-8 rounded-full"
-                    src={user.photoUrl}
+                    src={user.profileImageUrl}
                     alt={user.displayName || 'User'}
                   />
                 ) : (
@@ -208,7 +208,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
               Toggle Theme
             </button>
             <button
-              onClick={() => auth.signOut({ redirectUrl: '/' })}
+              onClick={() => user && user.signOut({ redirectUrl: '/' })}
               className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />

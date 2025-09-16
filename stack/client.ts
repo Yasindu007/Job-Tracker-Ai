@@ -9,4 +9,4 @@ export const client = new StackClientApp({
 });
 
 export const auth = client;
-export const useUser = client.useUser;
+export const useUser = client.useUser.bind(client);

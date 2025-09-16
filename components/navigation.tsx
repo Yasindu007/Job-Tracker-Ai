@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes';
-import { auth } from '@/stack';
+import { useUser } from '@stackframe/stack';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: BriefcaseIcon },
@@ -28,13 +28,14 @@ const navigation = [
 ]
 
 interface NavigationProps {
-  user?: any | null // Changed User to any
+  // user?: any | null // Changed User to any
 }
 
-export default function Navigation({ user }: NavigationProps) {
+export default function Navigation({ /* user */ }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
+  const user = useUser()
 
   return (
     <>

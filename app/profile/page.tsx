@@ -40,7 +40,7 @@ export default function ProfilePage() {
 
         <div className="mt-8">
           <button
-            onClick={() => auth.signOut({ redirectUrl: '/' })}
+            onClick={() => user.signOut({ redirectUrl: '/' })}
             className="btn btn-danger btn-md w-full flex items-center justify-center"
           >
             <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />

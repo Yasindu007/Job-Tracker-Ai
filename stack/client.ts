@@ -1,7 +1,7 @@
 import { StackClientApp } from "@stackframe/stack";
 
 export const client = new StackClientApp({
-  urls: { handler: "/handler" },
+  urls: { handler: "/auth" },
   tokenStore: "nextjs-cookie",
   // You might need to add projectId, publishableClientKey here from your .env.local
   // projectId: process.env.NEXT_PUBLIC_STACK_PROJECT_ID,

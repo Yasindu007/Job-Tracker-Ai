@@ -118,7 +118,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                     <p className="text-sm font-medium text-gray-900">
                       {user?.displayName || 'User'}
                     </p>
-                    <p className="text-xs text-gray-500">{user?.primaryEmail}</p>
+                    <p className="text-xs text-gray-500">{user?.primaryEmail || 'Not signed in'}</p>
                   </div>
                 </div>
                 <button
@@ -193,7 +193,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                 <p className="text-sm font-medium text-gray-900">
                   {user?.displayName || 'User'}
                 </p>
-                <p className="text-xs text-gray-500">{user?.primaryEmail}</p>
+                <p className="text-xs text-gray-500">{user?.primaryEmail || 'Not signed in'}</p>
               </div>
             </div>
             <button

@@ -35,9 +35,11 @@ export default function Dashboard() {
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
 
   useEffect(() => {
-    fetchJobs()
-    checkProfileCompletion()
-  }, [])
+    if (user) {
+      fetchJobs()
+      checkProfileCompletion()
+    }
+  }, [user])
 
   useEffect(() => {
     filterAndSortJobs()

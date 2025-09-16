@@ -9,14 +9,17 @@ export default function ProfileClientPage() {
   const user = useUser()
   const router = useRouter()
 
-  if (user === null) { // If user is null, it means not logged in or still loading
+  if (user === undefined) {
+    // Still loading, render a loading state or nothing
+    return null;
+  }
+
+  if (user === null) {
     router.push('/handler/sign-in')
     return null
   }
 
-  // If we reach here, user is not null, meaning they are logged in.
-  // The user object itself represents the loaded state.
-  // There is no separate 'isLoading' property on the user object.
+  // If we reach here, user is not null or undefined, so they are logged in.
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { StackProvider, StackTheme } from "@stackframe/stack";
 import { client } from "@/stack"; // Import client from the client-side stack.ts
-import { stackServerApp } from "../stack/server"; // Corrected import path
+
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'

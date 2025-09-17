@@ -1,53 +1,49 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { generateUniqueFileName } from '@/lib/file-utils'
+import { writeFile } from 'fs/promises'
+import path from 'path'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const user = await auth.getUser()
-    
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const formData = await request.formData()
-    const file = formData.get('file') as File
-    const extractedText = formData.get('extractedText') as string
+    const data = await request.formData()
+    const file: File | null = data.get('file') as unknown as File
+    const extractedText: string | null = data.get('extractedText') as string
 
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'uploads', 'resumes')
-    await mkdir(uploadsDir, { recursive: true })
-
-    // Generate unique filename
-    const uniqueFileName = generateUniqueFileName(file.name)
-    const filePath = join(uploadsDir, uniqueFileName)
-
-    // Save file to disk
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
+
+    // In a real application, you'd want to upload this to a cloud storage provider
+    // For this example, we'll save it to the local filesystem
+    const uploadsDir = path.join(process.cwd(), 'public/uploads')
+    const filePath = path.join(uploadsDir, `${Date.now()}_${file.name}`)
+    
+    // Ensure the uploads directory exists
+    await prisma.$executeRawUnsafe(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`) // A bit of a hack for local dev
+    await require('fs').promises.mkdir(uploadsDir, { recursive: true });
+
     await writeFile(filePath, buffer)
 
-    // Save resume record to database
-    const resume = await prisma.resume.create({
+    const newResume = await prisma.resume.create({
       data: {
-        originalFileName: file.name,
-        filePath: filePath,
-        extractedText: extractedText || null,
         userId: user.id,
+        originalFileName: file.name,
+        filePath: `/uploads/${path.basename(filePath)}`,
+        fileSize: file.size,
+        extractedText: extractedText || '',
       },
     })
 
-    return NextResponse.json(resume)
+    return NextResponse.json(newResume)
   } catch (error) {
     console.error('Error uploading resume:', error)
     return NextResponse.json(

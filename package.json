@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "npm run db:push && npm run db:generate && next build",
     "start": "next start",
     "lint": "next lint",
     "setup": "node scripts/setup.js",
     "db:push": "dotenv -e .env.local -- prisma db push",
     "db:studio": "dotenv -e .env.local -- prisma db studio",
-    "db:generate": "prisma generate"
+    "db:generate": "dotenv -e .env.local -- prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -26,7 +26,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
-    "dotenv": "^17.2.2",
     "framer-motion": "^10.16.16",
     "jose": "^5.2.0",
     "lucide-react": "^0.394.0",
@@ -50,6 +49,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@prisma/nextjs-monorepo-workaround-plugin": "^6.16.2",
     "@types/bcrypt": "^6.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
@@ -58,11 +58,10 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/zxcvbn": "^4.4.5",
-    "dotenv-cli": "^7.4.4",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
-  
   }
 }

@@ -135,7 +135,7 @@ export default function JobPrepAssistant() {
                 </div>
 
                 <div className="flex gap-3">
-                  <button
+                  <button 
                     onClick={handleAnalyze}
                     disabled={isAnalyzing || !jobPostingText.trim()}
                     className="btn btn-primary btn-md flex-1"

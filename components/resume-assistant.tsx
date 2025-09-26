@@ -253,7 +253,7 @@ export default function ResumeAssistant() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".pdf,.docx,.doc"
+                  accept=".pdf,.docx"
                   multiple
                   onChange={handleFileInput}
                   className="hidden"

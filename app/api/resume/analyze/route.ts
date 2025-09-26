@@ -1,64 +1,50 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/stack'
+import { NextResponse } from 'next/server'
+import { auth } from '@/stack' // Changed from @clerk/nextjs/server to match your upload route
 import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
+import { ResumeAnalysis } from '@/types'
 
-export const dynamic = 'force-dynamic'
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const user = await auth.getUser()
-    
+    const user = await auth.getUser() // Changed to match your auth pattern
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { resumeId, resumeText } = await request.json()
+    const body = await request.json()
+    const { resumeId, resumeText } = body
 
     if (!resumeId || !resumeText) {
-      return NextResponse.json(
-        { error: 'Resume ID and text are required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Resume ID and text are required' }, { status: 400 })
     }
 
-    // First, find the resume and verify ownership
-    const resume = await prisma.resume.findUnique({
-      where: {
-        id: resumeId,
-      },
-    });
-
-    if (!resume || resume.userId !== user.id) {
-      return NextResponse.json({ error: 'Resume not found or permission denied' }, { status: 404 });
-    }
-
-    // Get user profile for job role context
-    const userProfile = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: { expectedJobRole: true },
+    // Verify the resume belongs to the user
+    const existingResume = await prisma.resume.findFirst({
+      where: { id: resumeId, userId: user.id },
     })
 
-    // Analyze resume with AI
+    if (!existingResume) {
+      return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
+    }
+
     const aiService = createAIService()
-    const analysis = await aiService.analyzeResume(resumeText, userProfile?.expectedJobRole || undefined)
+    const analysisResult: ResumeAnalysis = await aiService.analyzeResume(resumeText)
 
-    // Update resume with analysis results
+    // Update the resume in the database
     const updatedResume = await prisma.resume.update({
-      where: {
-        id: resumeId, // Prisma v4 requires a single unique identifier for updates
-      },
+      where: { id: resumeId, userId: user.id },
       data: {
-        atsScore: analysis.atsScore,
-        enhancementSuggestions: JSON.stringify(analysis),
+        atsScore: analysisResult.atsScore,
+        analysis: analysisResult,
+        updatedAt: new Date(),
       },
     })
 
-    return NextResponse.json(analysis)
+    return NextResponse.json(analysisResult)
   } catch (error) {
-    console.error('Error analyzing resume:', error)
+    console.error('[RESUME_ANALYZE_ERROR]', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: `Internal Server Error: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     )
   }

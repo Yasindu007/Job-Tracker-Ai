@@ -104,7 +104,6 @@ export default function Dashboard() {
   const handleJobAdded = (newJob: Job) => {
     setJobs(prev => [newJob, ...prev])
     setShowJobForm(false)
-    toast.success('Job added successfully!')
   }
 
   const handleJobUpdated = (updatedJob: Job) => {

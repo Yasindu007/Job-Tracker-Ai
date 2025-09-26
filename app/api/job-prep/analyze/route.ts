@@ -41,9 +41,6 @@ export async function POST(request: NextRequest) {
       data: {
         jobPostingText,
         analysisResults: JSON.stringify(prepResults),
-        resumeSuggestions: JSON.stringify(prepResults.resumeSuggestions),
-        interviewQuestions: JSON.stringify(prepResults.interviewQuestions),
-        skillGaps: JSON.stringify(prepResults.skillGaps),
         userId: user.id,
       },
     })

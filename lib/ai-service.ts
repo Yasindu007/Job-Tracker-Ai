@@ -81,65 +81,7 @@ Return the enhanced resume text directly.`
   }
 
   private async callAI(prompt: string): Promise<string> {
-    switch (this.config.provider) {
-      case 'huggingface':
-        return this.callHuggingFace(prompt)
-      case 'together':
-        return this.callTogetherAI(prompt)
-      case 'openai':
-        return this.callOpenAI(prompt)
-      case 'ollama':
-        return this.callOllama(prompt)
-      default:
-        throw new Error(`Unsupported AI provider: ${this.config.provider}`)
-    }
-  }
-
-  private async callHuggingFace(prompt: string): Promise<string> {
-    const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3-8B-Instruct', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 1000,
-          temperature: 0.7,
-        },
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Hugging Face API error: ${response.statusText}`)
-    }
-
-    const data = await response.json()
-    return Array.isArray(data) ? data[0]?.generated_text || '' : data.generated_text || ''
-  }
-
-  private async callTogetherAI(prompt: string): Promise<string> {
-    const response = await fetch('https://api.together.xyz/inference', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-        prompt: prompt,
-        max_tokens: 1000,
-        temperature: 0.7,
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Together AI API error: ${response.statusText}`)
-    }
-
-    const data = await response.json()
-    return data.output?.choices?.[0]?.text || ''
+    return this.callOpenAI(prompt)
   }
 
   private async callOpenAI(prompt: string): Promise<string> {
@@ -163,27 +105,6 @@ Return the enhanced resume text directly.`
 
     const data = await response.json()
     return data.choices?.[0]?.message?.content || ''
-  }
-
-  private async callOllama(prompt: string): Promise<string> {
-    const response = await fetch(`${this.config.baseUrl || 'http://localhost:11434'}/api/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: this.config.model || 'llama3:8b',
-        prompt: prompt,
-        stream: false,
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.statusText}`)
-    }
-
-    const data = await response.json()
-    return data.response || ''
   }
 
   private parseResumeAnalysis(response: string): ResumeAnalysis {
@@ -249,13 +170,9 @@ Return the enhanced resume text directly.`
 
 // Factory function to create AI service instance
 export function createAIService(): AIService {
-  const provider = (process.env.AI_PROVIDER || 'huggingface') as AIServiceConfig['provider']
-  
   const config: AIServiceConfig = {
-    provider,
-    apiKey: process.env[`${provider.toUpperCase()}_API_KEY`],
-    model: process.env.AI_MODEL,
-    baseUrl: process.env.AI_BASE_URL,
+    provider: 'openai',
+    apiKey: process.env.OPENAI_API_KEY,
   }
 
   return new AIService(config)

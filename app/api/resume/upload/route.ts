@@ -28,7 +28,6 @@ export async function POST(request: Request) {
     const filePath = path.join(uploadsDir, `${Date.now()}_${file.name}`)
     
     // Ensure the uploads directory exists
-    await prisma.$executeRawUnsafe(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`) // A bit of a hack for local dev
     await require('fs').promises.mkdir(uploadsDir, { recursive: true });
 
     await writeFile(filePath, buffer)

@@ -8,7 +8,6 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   try {
     const user = await auth.getUser()
-    
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -35,7 +34,6 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const user = await auth.getUser()
-    
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -45,6 +43,7 @@ export async function POST(request: NextRequest) {
       title,
       company,
       status,
+      dateApplied,
       notes,
       jobUrl,
       location,
@@ -60,22 +59,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const job = await prisma.job.create({
+    const newJob = await prisma.job.create({
       data: {
         title,
         company,
         status: status || JobStatus.APPLIED,
+        dateApplied: dateApplied ? new Date(dateApplied) : new Date(),
         notes,
         jobUrl,
         location,
         salary,
         expectedInterviewDate: expectedInterviewDate ? new Date(expectedInterviewDate) : null,
-        expectedInterviewTime,
+        expectedInterviewTime: expectedInterviewTime || null,
         userId: user.id,
       },
     })
 
-    return NextResponse.json(job)
+    return NextResponse.json(newJob, { status: 201 })
   } catch (error) {
     console.error('Error creating job:', error)
     return NextResponse.json(

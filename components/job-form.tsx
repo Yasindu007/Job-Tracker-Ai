@@ -22,6 +22,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
     jobUrl: '',
     location: '',
     salary: '',
+    dateApplied: new Date().toISOString().split('T')[0],
     expectedInterviewDate: '',
     expectedInterviewTime: '',
   })
@@ -39,6 +40,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
         jobUrl: job.jobUrl || '',
         location: job.location || '',
         salary: job.salary || '',
+        dateApplied: job.dateApplied ? new Date(job.dateApplied).toISOString().split('T')[0] : '',
         expectedInterviewDate: job.expectedInterviewDate
           ? new Date(job.expectedInterviewDate).toISOString().split('T')[0]
           : "",
@@ -86,6 +88,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
         },
         body: JSON.stringify({
           ...formData,
+          dateApplied: formData.dateApplied ? new Date(formData.dateApplied).toISOString() : new Date().toISOString(),
           expectedInterviewDate: formData.expectedInterviewDate || null,
         }),
       })
@@ -253,6 +256,20 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
                 placeholder="https://company.com/job-posting"
               />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="dateApplied" className="block text-sm font-medium text-gray-700 mb-2">
+              Date Applied
+            </label>
+            <input
+              type="date"
+              id="dateApplied"
+              name="dateApplied"
+              value={formData.dateApplied}
+              onChange={handleInputChange}
+              className="input"
+            />
           </div>
 
           {isInterviewStatus && (

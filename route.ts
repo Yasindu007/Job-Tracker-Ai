@@ -48,6 +48,8 @@ export async function POST(request: NextRequest) {
       jobUrl,
       location,
       salary,
+      expectedInterviewDate,
+      expectedInterviewTime,
     } = body
 
     if (!title || !company) {
@@ -67,6 +69,8 @@ export async function POST(request: NextRequest) {
         jobUrl,
         location,
         salary,
+        expectedInterviewDate: expectedInterviewDate ? new Date(expectedInterviewDate) : null,
+        expectedInterviewTime: expectedInterviewTime || null,
         userId: user.id, // This was the missing piece
       },
     })

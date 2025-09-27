@@ -38,6 +38,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const dbUser = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (!dbUser) {
+      return NextResponse.json({ error: 'Unauthorized: User not found' }, { status: 401 });
+    }
     const body = await request.json()
     const {
       title,
@@ -77,7 +86,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newJob, { status: 201 })
   } catch (error) {
-    console.error('Error creating job:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

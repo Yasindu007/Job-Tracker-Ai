@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       where: { id: resumeId, userId: user.id },
       data: {
         atsScore: analysisResult.atsScore,
-        analysis: analysisResult,
+        enhancementSuggestions: JSON.stringify(analysisResult),
         updatedAt: new Date(),
       },
     })

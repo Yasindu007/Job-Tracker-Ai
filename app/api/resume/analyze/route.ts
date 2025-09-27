@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
 import { ResumeAnalysis } from '@/types'
 
+
 export async function POST(request: Request) {
   try {
     const user = await auth.getUser() // Changed to match your auth pattern

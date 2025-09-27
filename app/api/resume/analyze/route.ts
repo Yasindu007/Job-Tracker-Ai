@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/stack' // Changed from @clerk/nextjs/server to match your upload route
+import fs from 'fs'
 import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
 import { ResumeAnalysis } from '@/types'
@@ -9,6 +10,12 @@ export async function POST(request: Request) {
     const user = await auth.getUser() // Changed to match your auth pattern
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // This block is for local testing and will not run in production
+    if (process.env.NODE_ENV === 'development') {
+      // The following line is for testing purposes only and should not be used in production.
+      fs.readFileSync('./test/data/05-versions-space.pdf')
     }
 
     const body = await request.json()

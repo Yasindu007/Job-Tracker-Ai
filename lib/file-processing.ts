@@ -9,7 +9,7 @@ export async function extractTextFromFile(file: File): Promise<FileUploadResult>
   const buffer = Buffer.from(arrayBuffer)
 
   if (file.type === 'application/pdf') {
-    const pdf = (await import('pdf-parse')).default
+    const pdf = (await import('pdf-parse/lib/pdf-parse.js')).default
     const parsed = await pdf(buffer)
     return { text: parsed.text }
   }

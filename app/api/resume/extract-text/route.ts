@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     let text: string
 
     if (file.type === 'application/pdf') {
-      const pdf = (await import('pdf-parse')).default
+      const pdf = (await import('pdf-parse/lib/pdf-parse.js')).default
       const parsed = await pdf(buffer)
       text = parsed.text
     } else if (

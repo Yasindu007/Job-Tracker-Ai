@@ -3,6 +3,7 @@ import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { writeFile } from 'fs/promises'
 import path from 'path'
+import os from 'os'
 
 export async function POST(request: Request) {
   try {
@@ -22,11 +23,10 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // In a real application, you'd want to upload this to a cloud storage provider
-    // For this example, we'll save it to the local filesystem
-    const uploadsDir = path.join(process.cwd(), 'public/uploads')
+    // Use a serverless-safe temp directory
+    const uploadsDir = path.join(os.tmpdir(), 'uploads')
     const filePath = path.join(uploadsDir, `${Date.now()}_${file.name}`)
-    
+
     // Ensure the uploads directory exists
     await require('fs').promises.mkdir(uploadsDir, { recursive: true });
 
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
       data: {
         userId: user.id,
         originalFileName: file.name,
-        filePath: `/uploads/${path.basename(filePath)}`,
+        // Store the temp file path for reference; not served publicly in serverless
+        filePath: filePath,
         fileSize: file.size,
         extractedText: extractedText || '',
       },

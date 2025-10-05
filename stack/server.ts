@@ -7,5 +7,4 @@ export const stackServerApp = new StackServerApp({
   urls: { handler: "/handler" },
   // Read configuration from environment when available
   projectId: process.env.NEXT_PUBLIC_STACK_PROJECT_ID,
-  secretKey: process.env.STACK_SECRET_KEY || process.env.STACK_APP_SECRET,
 });

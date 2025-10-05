@@ -81,10 +81,15 @@ Return the enhanced resume text directly.`
   }
 
   private async callAI(prompt: string): Promise<string> {
+    // For now we only support OpenAI in this project setup
     return this.callOpenAI(prompt)
   }
 
   private async callOpenAI(prompt: string): Promise<string> {
+    if (!this.config.apiKey) {
+      throw new Error('Missing OPENAI_API_KEY. Set it in your environment variables.')
+    }
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -100,7 +105,8 @@ Return the enhanced resume text directly.`
     })
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.statusText}`)
+      const errorText = await response.text().catch(() => '')
+      throw new Error(`OpenAI API error (${response.status} ${response.statusText}): ${errorText}`)
     }
 
     const data = await response.json()

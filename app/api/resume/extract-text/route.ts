@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/stack'
-import mammoth from 'mammoth'
-import pdf from 'pdf-parse'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   try {
@@ -23,12 +23,14 @@ export async function POST(request: Request) {
     let text: string
 
     if (file.type === 'application/pdf') {
-      const data = await pdf(buffer)
-      text = data.text
+      const pdf = (await import('pdf-parse')).default
+      const parsed = await pdf(buffer)
+      text = parsed.text
     } else if (
       file.type ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ) {
+      const mammoth = await import('mammoth')
       const result = await mammoth.extractRawText({ buffer })
       text = result.value
     } else {

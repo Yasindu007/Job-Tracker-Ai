@@ -71,7 +71,16 @@ export async function POST(request: NextRequest) {
         salary,
         expectedInterviewDate: expectedInterviewDate ? new Date(expectedInterviewDate) : null,
         expectedInterviewTime: expectedInterviewTime || null,
-        userId: user.id,
+        // Atomically ensure user exists to satisfy FK
+        user: {
+          connectOrCreate: {
+            where: { id: user.id },
+            create: {
+              id: user.id,
+              email: `${user.id}@placeholder.local`,
+            },
+          },
+        },
       },
     })
 

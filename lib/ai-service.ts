@@ -1,9 +1,9 @@
 import { AIServiceConfig, ResumeAnalysis, JobFitScore, JobPostingPrep } from '@/types'
 
 export class AIService {
-  private config: AIServiceConfig
+  private config: AIServiceConfig & { baseUrl?: string; model?: string }
 
-  constructor(config: AIServiceConfig) {
+  constructor(config: AIServiceConfig & { baseUrl?: string; model?: string }) {
     this.config = config
   }
 
@@ -81,7 +81,11 @@ Return the enhanced resume text directly.`
   }
 
   private async callAI(prompt: string): Promise<string> {
-    // For now we only support OpenAI in this project setup
+    const provider = (this.config.provider || 'openai').toLowerCase()
+    if (provider === 'lmstudio' || provider === 'ollama') {
+      return this.callOpenAICompatible(prompt)
+    }
+    // default to OpenAI
     return this.callOpenAI(prompt)
   }
 
@@ -97,7 +101,7 @@ Return the enhanced resume text directly.`
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: this.config.model || 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 1000,
         temperature: 0.7,
@@ -107,6 +111,40 @@ Return the enhanced resume text directly.`
     if (!response.ok) {
       const errorText = await response.text().catch(() => '')
       throw new Error(`OpenAI API error (${response.status} ${response.statusText}): ${errorText}`)
+    }
+
+    const data = await response.json()
+    return data.choices?.[0]?.message?.content || ''
+  }
+
+  // For LM Studio / Ollama (OpenAI-compatible) via AI_BASE_URL
+  private async callOpenAICompatible(prompt: string): Promise<string> {
+    const baseUrl = this.config.baseUrl || process.env.AI_BASE_URL
+    if (!baseUrl) {
+      throw new Error('Missing AI_BASE_URL for local provider. Set it in your environment variables.')
+    }
+
+    const url = `${baseUrl.replace(/\/$/, '')}/v1/chat/completions`
+
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    if (this.config.apiKey) {
+      headers['Authorization'] = `Bearer ${this.config.apiKey}`
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: this.config.model || process.env.AI_MODEL || 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 1000,
+        temperature: 0.7,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '')
+      throw new Error(`Local AI API error (${response.status} ${response.statusText}): ${errorText}`)
     }
 
     const data = await response.json()
@@ -176,9 +214,12 @@ Return the enhanced resume text directly.`
 
 // Factory function to create AI service instance
 export function createAIService(): AIService {
-  const config: AIServiceConfig = {
-    provider: 'openai',
+  const provider = process.env.AI_PROVIDER || 'openai'
+  const config: AIServiceConfig & { baseUrl?: string; model?: string } = {
+    provider,
     apiKey: process.env.OPENAI_API_KEY,
+    baseUrl: process.env.AI_BASE_URL,
+    model: process.env.AI_MODEL,
   }
 
   return new AIService(config)

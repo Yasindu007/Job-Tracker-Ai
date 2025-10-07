@@ -23,9 +23,14 @@ export async function POST(request: Request) {
     let text: string
 
     if (file.type === 'application/pdf') {
-      const pdf = (await import('pdf-parse/lib/pdf-parse.js')).default
-      const parsed = await pdf(buffer)
-      text = parsed.text
+      try {
+        const pdf = (await import('pdf-parse')).default
+        const parsed = await pdf(buffer)
+        text = parsed.text
+      } catch (pdfError) {
+        console.error('PDF parsing error:', pdfError)
+        return NextResponse.json({ error: 'Failed to parse PDF. Please ensure the file is not corrupted.' }, { status: 400 })
+      }
     } else if (
       file.type ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'

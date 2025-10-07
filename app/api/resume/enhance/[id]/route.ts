@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/stack'
 import { prisma } from '@/lib/prisma'
 import { createAIService } from '@/lib/ai-service'
-import { readFile } from 'fs/promises'
+import { jsPDF } from 'jspdf'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,11 +45,36 @@ export async function POST(
       userProfile?.expectedJobRole || 'Software Engineer' // Default fallback
     )
 
-    // Return enhanced resume as text file
-    const response = new NextResponse(enhancedText, {
+    // Create PDF
+    const pdf = new jsPDF()
+    const pageWidth = pdf.internal.pageSize.getWidth()
+    const pageHeight = pdf.internal.pageSize.getHeight()
+    const margin = 20
+    const maxWidth = pageWidth - (margin * 2)
+    
+    // Split text into lines that fit the page width
+    const lines = pdf.splitTextToSize(enhancedText, maxWidth)
+    
+    let y = margin
+    const lineHeight = 7
+    
+    for (const line of lines) {
+      if (y + lineHeight > pageHeight - margin) {
+        pdf.addPage()
+        y = margin
+      }
+      pdf.text(line, margin, y)
+      y += lineHeight
+    }
+
+    // Generate PDF buffer
+    const pdfBuffer = Buffer.from(pdf.output('arraybuffer'))
+
+    // Return enhanced resume as PDF file
+    const response = new NextResponse(pdfBuffer, {
       headers: {
-        'Content-Type': 'text/plain',
-        'Content-Disposition': `attachment; filename="enhanced_${resume.originalFileName}.txt"`,
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="enhanced_${resume.originalFileName.replace(/\.[^/.]+$/, '')}.pdf"`,
       },
     })
 

@@ -52,8 +52,13 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
     }
   }
 
-  const handleUpdate = (updatedJob: Job) => {
+  const handleUpdate = (updatedJob: Job, options?: { calendarSyncStatus?: 'success' | 'failed' }) => {
     onUpdate(updatedJob)
+    if (options?.calendarSyncStatus === 'success') {
+      toast.success('Job updated and synced to calendar!')
+    } else if (options?.calendarSyncStatus === 'failed') {
+      toast.error('Job updated, but calendar sync failed.')
+    }
     setShowEditForm(false)
   }
 

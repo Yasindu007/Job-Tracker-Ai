@@ -101,14 +101,27 @@ export default function Dashboard() {
     setFilteredJobs(filtered)
   }
 
-  const handleJobAdded = (newJob: Job) => {
+  const handleJobAdded = (newJob: Job, options?: { calendarSyncStatus?: 'success' | 'failed' }) => {
     setJobs(prev => [newJob, ...prev])
     setShowJobForm(false)
+    if (options?.calendarSyncStatus === 'success') {
+      toast.success('Job saved and synced to calendar!')
+    } else if (options?.calendarSyncStatus === 'failed') {
+      toast.error('Job saved, but calendar sync failed.')
+    } else {
+      toast.success('Job saved successfully!')
+    }
   }
 
-  const handleJobUpdated = (updatedJob: Job) => {
+  const handleJobUpdated = (updatedJob: Job, options?: { calendarSyncStatus?: 'success' | 'failed' }) => {
     setJobs(prev => prev.map(job => job.id === updatedJob.id ? updatedJob : job))
-    toast.success('Job updated successfully!')
+    if (options?.calendarSyncStatus === 'success') {
+      toast.success('Job updated and synced to calendar!')
+    } else if (options?.calendarSyncStatus === 'failed') {
+      toast.error('Job updated, but calendar sync failed.')
+    } else {
+      toast.success('Job updated successfully!')
+    }
   }
 
   const handleJobDeleted = (jobId: string) => {

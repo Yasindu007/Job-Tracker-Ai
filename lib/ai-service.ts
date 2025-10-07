@@ -1,9 +1,9 @@
 import { AIServiceConfig, ResumeAnalysis, JobFitScore, JobPostingPrep } from '@/types'
 
 export class AIService {
-  private config: AIServiceConfig & { baseUrl?: string; model?: string }
+  private config: AIServiceConfig & { baseUrl?: string; model?: string; originalProvider?: string }
 
-  constructor(config: AIServiceConfig & { baseUrl?: string; model?: string }) {
+  constructor(config: AIServiceConfig & { baseUrl?: string; model?: string; originalProvider?: string }) {
     this.config = config
   }
 
@@ -81,11 +81,14 @@ Return the enhanced resume text directly.`
   }
 
   private async callAI(prompt: string): Promise<string> {
-    const provider = (this.config.provider || 'openai').toLowerCase()
-    if (provider === 'lmstudio' || provider === 'ollama') {
+    const provider = (this.config.originalProvider || this.config.provider || 'openai').toLowerCase()
+    console.log('AI Service - Provider:', provider, 'Config:', this.config)
+    if (provider === 'lmstudio' || provider === 'ollama' || provider === 'local') {
+      console.log('Using OpenAI-compatible local provider')
       return this.callOpenAICompatible(prompt)
     }
     // default to OpenAI
+    console.log('Using OpenAI provider')
     return this.callOpenAI(prompt)
   }
 
@@ -127,6 +130,7 @@ Return the enhanced resume text directly.`
     const url = `${baseUrl.replace(/\/$/, '')}/v1/chat/completions`
 
     const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    // API key is optional for local providers like LM Studio
     if (this.config.apiKey) {
       headers['Authorization'] = `Bearer ${this.config.apiKey}`
     }
@@ -214,12 +218,45 @@ Return the enhanced resume text directly.`
 
 // Factory function to create AI service instance
 export function createAIService(): AIService {
-  const provider = process.env.AI_PROVIDER || 'openai'
-  const config: AIServiceConfig & { baseUrl?: string; model?: string } = {
-    provider,
-    apiKey: process.env.OPENAI_API_KEY,
-    baseUrl: process.env.AI_BASE_URL,
-    model: process.env.AI_MODEL,
+  const envProvider = process.env.AI_PROVIDER || 'openai'
+  
+  // Map environment variables based on provider
+  let apiKey: string | undefined
+  let baseUrl: string | undefined
+  let model: string | undefined
+  
+  switch (envProvider.toLowerCase()) {
+    case 'lmstudio':
+    case 'ollama':
+      baseUrl = process.env.AI_BASE_URL
+      model = process.env.AI_MODEL || 'llama3.1:8b'
+      break
+    case 'huggingface':
+      apiKey = process.env.HUGGINGFACE_API_KEY
+      baseUrl = process.env.AI_BASE_URL || 'https://api-inference.huggingface.co'
+      model = process.env.AI_MODEL || 'microsoft/DialoGPT-medium'
+      break
+    case 'together':
+      apiKey = process.env.TOGETHER_API_KEY
+      baseUrl = process.env.AI_BASE_URL || 'https://api.together.xyz'
+      model = process.env.AI_MODEL || 'meta-llama/Llama-2-7b-chat-hf'
+      break
+    case 'groq':
+      apiKey = process.env.GROQ_API_KEY
+      baseUrl = process.env.AI_BASE_URL || 'https://api.groq.com'
+      model = process.env.AI_MODEL || 'llama3-8b-8192'
+      break
+    default: // openai
+      apiKey = process.env.OPENAI_API_KEY
+      model = process.env.AI_MODEL || 'gpt-3.5-turbo'
+  }
+  
+  const config: AIServiceConfig & { baseUrl?: string; model?: string; originalProvider?: string } = {
+    provider: envProvider === 'lmstudio' ? 'ollama' : (envProvider as 'huggingface' | 'together' | 'openai' | 'ollama'),
+    originalProvider: envProvider,
+    apiKey,
+    baseUrl,
+    model,
   }
 
   return new AIService(config)

@@ -10,7 +10,12 @@ import toast from 'react-hot-toast'
 interface JobFormProps {
   job?: Job
   onClose: () => void
-  onSuccess: (job: Job) => void
+  onSuccess: (
+    job: Job,
+    options?: {
+      calendarSyncStatus?: 'success' | 'failed'
+    }
+  ) => void
 }
 
 export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
@@ -111,18 +116,16 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
             })
 
             if (syncResponse.ok) {
-              toast.success('Job saved and synced to calendar!')
+              onSuccess(data, { calendarSyncStatus: 'success' })
             } else {
-              toast.success('Job saved, but calendar sync failed')
+              onSuccess(data, { calendarSyncStatus: 'failed' })
             }
           } catch (error) {
-            toast.success('Job saved, but calendar sync failed')
+            onSuccess(data, { calendarSyncStatus: 'failed' })
           }
         } else {
-          toast.success('Job saved successfully!')
+          onSuccess(data)
         }
-        
-        onSuccess(data)
       } else {
         const error = await response.json()
         toast.error(error.error || 'Failed to save job')

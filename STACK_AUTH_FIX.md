@@ -28,9 +28,9 @@ Your `NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY` doesn't match your `NEXT_PUBLIC_
 
    **Local Development (`.env.local`):**
    ```env
-   NEXT_PUBLIC_STACK_PROJECT_ID="a81352d3-d3d8-4941-bc48-6573db6993a6"
-   NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY="pk_...your-correct-key"
-   STACK_SECRET_SERVER_KEY="sk_...your-secret-key"
+   NEXT_PUBLIC_STACK_PROJECT_ID=a81352d3-d3d8-4941-bc48-6573db6993a6
+   NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=pk_...your-correct-key
+   STACK_SECRET_SERVER_KEY=sk_...your-secret-key
    ```
 
    **Netlify (if deployed):**

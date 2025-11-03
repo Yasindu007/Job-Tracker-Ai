@@ -40,11 +40,14 @@ export default function JobPrepAssistant() {
         setPrepResults(data)
         toast.success('Job posting analyzed successfully!')
       } else {
-        const error = await response.json()
-        toast.error(error.error || 'Failed to analyze job posting')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }))
+        const errorMessage = errorData.error || `Server returned status ${response.status}`
+        console.error('Job prep analysis error:', errorMessage)
+        toast.error(errorMessage)
       }
     } catch (error) {
-      toast.error('Failed to analyze job posting')
+      console.error('Network error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to analyze job posting. Please check your connection.')
     } finally {
       setIsAnalyzing(false)
     }

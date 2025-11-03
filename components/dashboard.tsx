@@ -17,7 +17,7 @@ import {
 import JobCard from '@/components/job-card'
 import JobForm from '@/components/job-form'
 import ProfileSetup from '@/components/profile-setup'
-import Navigation from '@/components/navigation'
+import AppShell from '@/components/app-shell'
 import CalendarSettings from '@/components/calendar-settings'
 import { Job, JobStatus } from '@/types'
 import toast from 'react-hot-toast'
@@ -153,18 +153,15 @@ export default function Dashboard() {
     )
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <Navigation />
-      
+    return (
+    <AppShell>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b lg:ml-64">
+      <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <BriefcaseIcon className="h-8 w-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">Job Tracker</h1>
+              <h1 className="ml-2 text-2xl font-bold text-gray-900 dark:text-white">Job Tracker</h1>
             </div>
             <div className="flex items-center space-x-4">
               <button
@@ -186,7 +183,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:ml-64">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-foreground">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <motion.div
@@ -199,8 +196,8 @@ export default function Dashboard() {
                 <BriefcaseIcon className="h-6 w-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                                <p className="text-sm font-medium text-muted-foreground">Total</p>
+                <p className="text-2xl font-bold text-foreground">{stats.total}</p>
               </div>
             </div>
           </motion.div>
@@ -216,8 +213,8 @@ export default function Dashboard() {
                 <DocumentTextIcon className="h-6 w-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Applied</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.applied}</p>
+                                <p className="text-sm font-medium text-muted-foreground">Applied</p>
+                <p className="text-2xl font-bold text-foreground">{stats.applied}</p>
               </div>
             </div>
           </motion.div>
@@ -233,8 +230,8 @@ export default function Dashboard() {
                 <CalendarIcon className="h-6 w-6 text-yellow-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Interview</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.interview}</p>
+                                <p className="text-sm font-medium text-muted-foreground">Interview</p>
+                <p className="text-2xl font-bold text-foreground">{stats.interview}</p>
               </div>
             </div>
           </motion.div>
@@ -250,8 +247,8 @@ export default function Dashboard() {
                 <ChartBarIcon className="h-6 w-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Offered</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.offered}</p>
+                                <p className="text-sm font-medium text-muted-foreground">Offered</p>
+                <p className="text-2xl font-bold text-foreground">{stats.offered}</p>
               </div>
             </div>
           </motion.div>
@@ -267,15 +264,15 @@ export default function Dashboard() {
                 <BriefcaseIcon className="h-6 w-6 text-red-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Rejected</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.rejected}</p>
+                                <p className="text-sm font-medium text-muted-foreground">Rejected</p>
+                <p className="text-2xl font-bold text-foreground">{stats.rejected}</p>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Filters and Search */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+                {/* Filters and Search */}
+        <div className="card p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
@@ -315,11 +312,11 @@ export default function Dashboard() {
 
         {/* Jobs List */}
         <div className="space-y-4">
-          {filteredJobs.length === 0 ? (
+                    {filteredJobs.length === 0 ? (
             <div className="text-center py-12">
-              <BriefcaseIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-              <p className="text-gray-600 mb-4">
+              <BriefcaseIcon className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2">No jobs found</h3>
+              <p className="text-muted-foreground mb-4">
                 {jobs.length === 0 
                   ? "Get started by adding your first job application"
                   : "Try adjusting your search or filter criteria"
@@ -373,6 +370,6 @@ export default function Dashboard() {
           onClose={() => setShowCalendarSettings(false)}
         />
       )}
-    </div>
+    </AppShell>
   )
 }

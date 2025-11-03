@@ -81,43 +81,55 @@ Return the enhanced resume text directly.`
   }
 
   private async callAI(prompt: string): Promise<string> {
-    const provider = (this.config.originalProvider || this.config.provider || 'openai').toLowerCase()
+    const provider = (this.config.originalProvider || this.config.provider || 'gemini').toLowerCase()
     console.log('AI Service - Provider:', provider, 'Config:', this.config)
+    
+    if (provider === 'gemini' || provider === 'google') {
+      console.log('Using Google Gemini provider')
+      return this.callGemini(prompt)
+    }
+    
     if (provider === 'lmstudio' || provider === 'ollama' || provider === 'local') {
       console.log('Using OpenAI-compatible local provider')
       return this.callOpenAICompatible(prompt)
     }
-    // default to OpenAI
-    console.log('Using OpenAI provider')
-    return this.callOpenAI(prompt)
+    
+    // default to Gemini
+    console.log('Using Google Gemini provider (default)')
+    return this.callGemini(prompt)
   }
 
-  private async callOpenAI(prompt: string): Promise<string> {
+  private async callGemini(prompt: string): Promise<string> {
     if (!this.config.apiKey) {
-      throw new Error('Missing OPENAI_API_KEY. Set it in your environment variables.')
+      throw new Error('Missing GEMINI_API_KEY. Set it in your environment variables.')
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const model = this.config.model || 'gemini-pro'
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.config.apiKey}`
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: this.config.model || 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 1000,
-        temperature: 0.7,
+        contents: [{
+          parts: [{ text: prompt }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 8192, // Increased for Gemini Pro - supports up to 8192 tokens
+        }
       }),
     })
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '')
-      throw new Error(`OpenAI API error (${response.status} ${response.statusText}): ${errorText}`)
+      throw new Error(`Gemini API error (${response.status} ${response.statusText}): ${errorText}`)
     }
 
     const data = await response.json()
-    return data.choices?.[0]?.message?.content || ''
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
   }
 
   // For LM Studio / Ollama (OpenAI-compatible) via AI_BASE_URL
@@ -218,7 +230,7 @@ Return the enhanced resume text directly.`
 
 // Factory function to create AI service instance
 export function createAIService(): AIService {
-  const envProvider = process.env.AI_PROVIDER || 'openai'
+  const envProvider = process.env.AI_PROVIDER || 'gemini'
   
   // Map environment variables based on provider
   let apiKey: string | undefined
@@ -226,6 +238,11 @@ export function createAIService(): AIService {
   let model: string | undefined
   
   switch (envProvider.toLowerCase()) {
+    case 'gemini':
+    case 'google':
+      apiKey = process.env.GEMINI_API_KEY
+      model = process.env.AI_MODEL || 'gemini-pro'
+      break
     case 'lmstudio':
     case 'ollama':
       baseUrl = process.env.AI_BASE_URL
@@ -246,13 +263,13 @@ export function createAIService(): AIService {
       baseUrl = process.env.AI_BASE_URL || 'https://api.groq.com'
       model = process.env.AI_MODEL || 'llama3-8b-8192'
       break
-    default: // openai
-      apiKey = process.env.OPENAI_API_KEY
-      model = process.env.AI_MODEL || 'gpt-3.5-turbo'
+    default: // gemini
+      apiKey = process.env.GEMINI_API_KEY
+      model = process.env.AI_MODEL || 'gemini-pro'
   }
   
   const config: AIServiceConfig & { baseUrl?: string; model?: string; originalProvider?: string } = {
-    provider: envProvider === 'lmstudio' ? 'ollama' : (envProvider as 'huggingface' | 'together' | 'openai' | 'ollama'),
+    provider: envProvider === 'lmstudio' ? 'ollama' : (envProvider === 'google' ? 'gemini' : envProvider) as 'huggingface' | 'together' | 'gemini' | 'ollama',
     originalProvider: envProvider,
     apiKey,
     baseUrl,

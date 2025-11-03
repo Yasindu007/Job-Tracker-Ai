@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import AppShell from './app-shell'
 import { 
   ChartBarIcon, 
   BriefcaseIcon, 
@@ -70,20 +71,20 @@ export default function Analytics() {
   const monthlyEntries = Object.entries(monthlyData).slice(-6) // Last 6 months
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AppShell>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b lg:ml-64">
+      <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <ChartBarIcon className="h-8 w-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">Analytics</h1>
+              <h1 className="ml-2 text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:ml-64">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <motion.div
@@ -96,8 +97,8 @@ export default function Analytics() {
                 <BriefcaseIcon className="h-6 w-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Applications</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-sm font-medium text-muted-foreground">Total Applications</p>
+                <p className="text-2xl font-bold text-foreground">{stats.total}</p>
               </div>
             </div>
           </motion.div>
@@ -113,8 +114,8 @@ export default function Analytics() {
                 <ArrowTrendingUpIcon className="h-6 w-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Success Rate</p>
-                <p className="text-2xl font-bold text-gray-900">{successRate}%</p>
+                <p className="text-sm font-medium text-muted-foreground">Success Rate</p>
+                <p className="text-2xl font-bold text-foreground">{successRate}%</p>
               </div>
             </div>
           </motion.div>
@@ -130,8 +131,8 @@ export default function Analytics() {
                 <CalendarIcon className="h-6 w-6 text-yellow-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Interview Rate</p>
-                <p className="text-2xl font-bold text-gray-900">{interviewRate}%</p>
+                <p className="text-sm font-medium text-muted-foreground">Interview Rate</p>
+                <p className="text-2xl font-bold text-foreground">{interviewRate}%</p>
               </div>
             </div>
           </motion.div>
@@ -147,8 +148,8 @@ export default function Analytics() {
                 <ChartBarIcon className="h-6 w-6 text-purple-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Avg Job Fit</p>
-                <p className="text-2xl font-bold text-gray-900">{avgJobFitScore}%</p>
+                <p className="text-sm font-medium text-muted-foreground">Avg Job Fit</p>
+                <p className="text-2xl font-bold text-foreground">{avgJobFitScore}%</p>
               </div>
             </div>
           </motion.div>
@@ -162,16 +163,16 @@ export default function Analytics() {
             transition={{ delay: 0.4 }}
             className="card p-6"
           >
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Application Status Distribution
             </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-700">Applied</span>
+                  <span className="text-sm font-medium text-foreground">Applied</span>
                 </div>
-                <span className="text-sm font-bold text-gray-900">{stats.applied}</span>
+                <span className="text-sm font-bold text-foreground">{stats.applied}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -183,9 +184,9 @@ export default function Analytics() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-700">Interview</span>
+                  <span className="text-sm font-medium text-foreground">Interview</span>
                 </div>
-                <span className="text-sm font-bold text-gray-900">{stats.interview}</span>
+                <span className="text-sm font-bold text-foreground">{stats.interview}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -197,9 +198,9 @@ export default function Analytics() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-700">Offered</span>
+                  <span className="text-sm font-medium text-foreground">Offered</span>
                 </div>
-                <span className="text-sm font-bold text-gray-900">{stats.offered}</span>
+                <span className="text-sm font-bold text-foreground">{stats.offered}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -211,9 +212,9 @@ export default function Analytics() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-700">Rejected</span>
+                  <span className="text-sm font-medium text-foreground">Rejected</span>
                 </div>
-                <span className="text-sm font-bold text-gray-900">{stats.rejected}</span>
+                <span className="text-sm font-bold text-foreground">{stats.rejected}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -231,16 +232,16 @@ export default function Analytics() {
             transition={{ delay: 0.5 }}
             className="card p-6"
           >
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Application Trends (Last 6 Months)
             </h3>
             {monthlyEntries.length > 0 ? (
               <div className="space-y-4">
                 {monthlyEntries.map(([month, count]) => (
                   <div key={month} className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">{month}</span>
+                    <span className="text-sm font-medium text-foreground">{month}</span>
                     <div className="flex items-center">
-                      <div className="w-24 bg-gray-200 rounded-full h-2 mr-3">
+                      <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                         <div
                           className="bg-blue-500 h-2 rounded-full"
                           style={{ 
@@ -248,7 +249,7 @@ export default function Analytics() {
                           }}
                         ></div>
                       </div>
-                      <span className="text-sm font-bold text-gray-900 w-8 text-right">{count}</span>
+                      <span className="text-sm font-bold text-foreground w-8 text-right">{count}</span>
                     </div>
                   </div>
                 ))}
@@ -269,13 +270,13 @@ export default function Analytics() {
           transition={{ delay: 0.6 }}
           className="card p-6 mt-8"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
             Key Insights
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-gray-900 mb-2">Performance Summary</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <h4 className="font-medium text-foreground mb-2">Performance Summary</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>• You've applied to {stats.total} jobs total</li>
                 <li>• {interviewRate}% of applications led to interviews</li>
                 <li>• {successRate}% of applications resulted in job offers</li>
@@ -283,8 +284,8 @@ export default function Analytics() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900 mb-2">Recommendations</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <h4 className="font-medium text-foreground mb-2">Recommendations</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 {successRate < 10 && (
                   <li>• Consider improving your resume and interview skills</li>
                 )}
@@ -300,6 +301,6 @@ export default function Analytics() {
           </div>
         </motion.div>
       </div>
-    </div>
+    </AppShell>
   )
 }

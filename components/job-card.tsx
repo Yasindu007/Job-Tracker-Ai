@@ -125,12 +125,12 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">{getStatusIcon(job.status)}</span>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
-                <p className="text-gray-600">{job.company}</p>
+                                <h3 className="text-lg font-semibold text-foreground">{job.title}</h3>
+                <p className="text-muted-foreground">{job.company}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
               <div className="flex items-center gap-1">
                 <CalendarIcon className="h-4 w-4" />
                 <span>Applied {formatDate(new Date(job.dateApplied))}</span>
@@ -149,12 +149,12 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
               )}
             </div>
 
-            {job.notes && (
-              <p className="text-gray-700 mb-3 line-clamp-2">{job.notes}</p>
+                        {job.notes && (
+              <p className="text-foreground mb-3 line-clamp-2">{job.notes}</p>
             )}
 
             {job.expectedInterviewDate && (
-              <div className="flex items-center gap-1 text-sm text-blue-600 mb-3">
+              <div className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 mb-3">
                 <CalendarIcon className="h-4 w-4" />
                 <span>
                   Interview: {formatDate(new Date(job.expectedInterviewDate))}
@@ -188,11 +188,11 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
 
           <div className="flex items-center gap-2 ml-4">
             {job.jobUrl && (
-              <a
+                            <a
                 href={job.jobUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                className="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 title="View job posting"
               >
                 <ArrowTopRightOnSquareIcon className="h-5 w-5" />
@@ -203,10 +203,10 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
               <button
                 onClick={() => handleCalendarSync(job.calendarSynced ? 'delete' : 'create')}
                 disabled={isSyncing}
-                className={`p-2 transition-colors disabled:opacity-50 ${
+                                className={`p-2 transition-colors disabled:opacity-50 ${
                   job.calendarSynced 
-                    ? 'text-green-600 hover:text-red-600' 
-                    : 'text-gray-400 hover:text-green-600'
+                    ? 'text-green-600 dark:text-green-400 hover:text-red-600 dark:hover:text-red-400' 
+                    : 'text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400'
                 }`}
                 title={job.calendarSynced ? 'Remove from calendar' : 'Add to calendar'}
               >
@@ -220,17 +220,17 @@ export default function JobCard({ job, onUpdate, onDelete }: JobCardProps) {
               </button>
             )}
             
-            <button
+                        <button
               onClick={() => setShowEditForm(true)}
-              className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+              className="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               title="Edit job"
             >
               <PencilIcon className="h-5 w-5" />
             </button>
-            <button
+                        <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="p-2 text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+              className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
               title="Delete job"
             >
               {isDeleting ? (

@@ -86,15 +86,15 @@ export default function CalendarSettings({ onClose }: CalendarSettingsProps) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-lg shadow-xl max-w-md w-full"
+        className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full"
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-foreground">
             Calendar Integration
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
@@ -103,10 +103,10 @@ export default function CalendarSettings({ onClose }: CalendarSettingsProps) {
         <div className="p-6 space-y-6">
           <div className="text-center">
             <CloudIcon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-foreground mb-2">
               Connect Your Calendar
             </h3>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Sync your interview schedules with your calendar to never miss an appointment.
             </p>
           </div>
@@ -136,8 +136,8 @@ export default function CalendarSettings({ onClose }: CalendarSettingsProps) {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900">Google Calendar</h4>
-                  <p className="text-sm text-gray-500">Sync with your Google Calendar</p>
+                  <h4 className="font-medium text-foreground">Google Calendar</h4>
+                  <p className="text-sm text-muted-foreground">Sync with your Google Calendar</p>
                 </div>
               </div>
               
@@ -187,8 +187,8 @@ export default function CalendarSettings({ onClose }: CalendarSettingsProps) {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900">Apple Calendar</h4>
-                  <p className="text-sm text-gray-500">Coming soon</p>
+                  <h4 className="font-medium text-foreground">Apple Calendar</h4>
+                  <p className="text-sm text-muted-foreground">Coming soon</p>
                 </div>
               </div>
               
@@ -200,8 +200,8 @@ export default function CalendarSettings({ onClose }: CalendarSettingsProps) {
           </div>
 
           <div className="bg-blue-50 rounded-lg p-4">
-            <h4 className="font-medium text-blue-900 mb-2">How it works:</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
+            <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">How it works:</h4>
+            <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
               <li>• Connect your Google Calendar account</li>
               <li>• Interview appointments are automatically synced</li>
               <li>• Get email and popup reminders</li>

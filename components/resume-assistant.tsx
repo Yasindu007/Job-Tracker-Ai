@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
+import AppShell from './app-shell'
 import { 
   DocumentArrowUpIcon, 
   DocumentTextIcon, 
@@ -71,7 +72,6 @@ export default function ResumeAssistant() {
           continue
         }
 
-        // Move text extraction to the server
         const extractFormData = new FormData()
         extractFormData.append('file', file)
 
@@ -88,7 +88,6 @@ export default function ResumeAssistant() {
 
         const { text: extractedText } = await extractResponse.json()
 
-        // Upload file to server
         const formData = new FormData()
         formData.append('file', file)
         formData.append('extractedText', extractedText)
@@ -196,44 +195,44 @@ export default function ResumeAssistant() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AppShell>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b lg:ml-64">
+      <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <DocumentTextIcon className="h-8 w-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">Resume Assistant</h1>
+              <h1 className="ml-2 text-2xl font-bold text-foreground">Resume Assistant</h1>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:ml-64">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upload Section */}
           <div className="space-y-6">
             <div className="card p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-foreground mb-4">
                 Upload Your Resume
               </h2>
               
               <div
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                   dragActive
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-300 hover:border-gray-400'
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                    : 'border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">
+                <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                <p className="text-muted-foreground mb-4">
                   Drag and drop your resume here, or click to browse
                 </p>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   Supports PDF and DOCX files up to 10MB
                 </p>
                 <button
@@ -263,14 +262,14 @@ export default function ResumeAssistant() {
 
             {/* Resume List */}
             <div className="card p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-foreground mb-4">
                 Your Resumes
               </h3>
               
               {resumes.length === 0 ? (
                 <div className="text-center py-8">
-                  <DocumentTextIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">No resumes uploaded yet</p>
+                  <DocumentTextIcon className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                  <p className="text-muted-foreground">No resumes uploaded yet</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -279,8 +278,8 @@ export default function ResumeAssistant() {
                       key={resume.id}
                       className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                         selectedResume?.id === resume.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                       }`}
                       onClick={() => setSelectedResume(resume)}
                     >
@@ -290,10 +289,10 @@ export default function ResumeAssistant() {
                             {getFileTypeIcon(resume.originalFileName)}
                           </span>
                           <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-medium text-foreground">
                               {resume.originalFileName}
                             </p>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted-foreground">
                               Uploaded {new Date(resume.createdAt).toLocaleDateString()}
                             </p>
                           </div>
@@ -309,7 +308,7 @@ export default function ResumeAssistant() {
                               e.stopPropagation()
                               handleDeleteResume(resume.id)
                             }}
-                            className="p-1 text-gray-400 hover:text-red-600"
+                            className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400"
                           >
                             <XMarkIcon className="h-5 w-5" />
                           </button>
@@ -328,7 +327,7 @@ export default function ResumeAssistant() {
               <>
                 <div className="card p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-foreground">
                       Resume Analysis
                     </h3>
                     <div className="flex gap-2">
@@ -359,14 +358,14 @@ export default function ResumeAssistant() {
                   {analysis ? (
                     <div className="space-y-6">
                       {/* ATS Score */}
-                      <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="bg-muted rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-gray-900">ATS Score</h4>
+                          <h4 className="font-medium text-foreground">ATS Score</h4>
                           <span className={`text-2xl font-bold ${getATSScoreColor(analysis.atsScore)}`}>
                             {analysis.atsScore}/100
                           </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div
                             className={`h-2 rounded-full ${
                               analysis.atsScore >= 80 ? 'bg-green-500' :
@@ -381,7 +380,7 @@ export default function ResumeAssistant() {
                       {/* Suggestions */}
                       {analysis.suggestions.length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                          <h4 className="font-medium text-foreground mb-3 flex items-center">
                             <LightBulbIcon className="h-5 w-5 mr-2 text-yellow-500" />
                             Improvement Suggestions
                           </h4>
@@ -389,7 +388,7 @@ export default function ResumeAssistant() {
                             {analysis.suggestions.map((suggestion, index) => (
                               <li key={index} className="flex items-start">
                                 <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                                <span className="text-gray-700">{suggestion}</span>
+                                <span className="text-foreground">{suggestion}</span>
                               </li>
                             ))}
                           </ul>
@@ -399,7 +398,7 @@ export default function ResumeAssistant() {
                       {/* Missing Keywords */}
                       {analysis.missingKeywords.length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                          <h4 className="font-medium text-foreground mb-3 flex items-center">
                             <ExclamationTriangleIcon className="h-5 w-5 mr-2 text-orange-500" />
                             Missing Keywords
                           </h4>
@@ -407,7 +406,7 @@ export default function ResumeAssistant() {
                             {analysis.missingKeywords.map((keyword, index) => (
                               <span
                                 key={index}
-                                className="px-2 py-1 bg-orange-100 text-orange-800 text-sm rounded-full"
+                                className="px-2 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-sm rounded-full"
                               >
                                 {keyword}
                               </span>
@@ -419,7 +418,7 @@ export default function ResumeAssistant() {
                       {/* Skill Gaps */}
                       {analysis.skillGaps.length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                          <h4 className="font-medium text-foreground mb-3 flex items-center">
                             <ChartBarIcon className="h-5 w-5 mr-2 text-blue-500" />
                             Skill Gaps
                           </h4>
@@ -427,7 +426,7 @@ export default function ResumeAssistant() {
                             {analysis.skillGaps.map((gap, index) => (
                               <li key={index} className="flex items-start">
                                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0"></span>
-                                <span className="text-gray-700">{gap}</span>
+                                <span className="text-foreground">{gap}</span>
                               </li>
                             ))}
                           </ul>
@@ -436,8 +435,8 @@ export default function ResumeAssistant() {
                     </div>
                   ) : (
                     <div className="text-center py-8">
-                      <ChartBarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600 mb-4">
+                      <ChartBarIcon className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">
                         Click "Analyze Resume" to get AI-powered insights
                       </p>
                     </div>
@@ -447,11 +446,11 @@ export default function ResumeAssistant() {
             ) : (
               <div className="card p-6">
                 <div className="text-center py-8">
-                  <DocumentTextIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <DocumentTextIcon className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2">
                     Select a Resume
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     Choose a resume from the list to view analysis and get AI-powered suggestions
                   </p>
                 </div>
@@ -460,6 +459,6 @@ export default function ResumeAssistant() {
           </div>
         </div>
       </div>
-    </div>
+    </AppShell>
   )
 }

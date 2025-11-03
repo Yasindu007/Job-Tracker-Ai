@@ -27,13 +27,15 @@ export default function RootLayout({
           <StackTheme>
             <Providers>
               {children}
-              <Toaster
+                            <Toaster
                 position="top-right"
                 toastOptions={{
                   duration: 4000,
+                  className: '',
                   style: {
-                    background: '#363636',
-                    color: '#fff',
+                    background: 'hsl(var(--card))',
+                    color: 'hsl(var(--card-foreground))',
+                    border: '1px solid hsl(var(--border))',
                   },
                 }}
               />

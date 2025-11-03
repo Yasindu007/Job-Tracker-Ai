@@ -145,15 +145,15 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-foreground">
             {job ? 'Edit Job' : 'Add New Job'}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
@@ -162,7 +162,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-foreground mb-2">
                 Job Title *
               </label>
               <input
@@ -178,7 +178,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
             </div>
 
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="company" className="block text-sm font-medium text-foreground mb-2">
                 Company *
               </label>
               <input
@@ -196,7 +196,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="status" className="block text-sm font-medium text-foreground mb-2">
                 Status
               </label>
               <select
@@ -214,7 +214,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
             </div>
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="location" className="block text-sm font-medium text-foreground mb-2">
                 Location
               </label>
               <input
@@ -231,7 +231,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="salary" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="salary" className="block text-sm font-medium text-foreground mb-2">
                 Salary
               </label>
               <input
@@ -246,7 +246,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
             </div>
 
             <div>
-              <label htmlFor="jobUrl" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="jobUrl" className="block text-sm font-medium text-foreground mb-2">
                 Job URL
               </label>
               <input
@@ -262,7 +262,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
           </div>
 
           <div>
-            <label htmlFor="dateApplied" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="dateApplied" className="block text-sm font-medium text-foreground mb-2">
               Date Applied
             </label>
             <input
@@ -279,7 +279,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="expectedInterviewDate" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="expectedInterviewDate" className="block text-sm font-medium text-foreground mb-2">
                     <CalendarIcon className="h-4 w-4 inline mr-1" />
                     Interview Date
                   </label>
@@ -294,7 +294,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
                 </div>
 
                 <div>
-                  <label htmlFor="expectedInterviewTime" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="expectedInterviewTime" className="block text-sm font-medium text-foreground mb-2">
                     <ClockIcon className="h-4 w-4 inline mr-1" />
                     Interview Time
                   </label>
@@ -319,7 +319,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
                     onChange={(e) => setSyncToCalendar(e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <label htmlFor="syncToCalendar" className="ml-2 block text-sm text-gray-900 flex items-center">
+                  <label htmlFor="syncToCalendar" className="ml-2 block text-sm text-foreground flex items-center">
                     <CloudIcon className="h-4 w-4 mr-1" />
                     Sync to Google Calendar
                   </label>
@@ -329,7 +329,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
           )}
 
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="notes" className="block text-sm font-medium text-foreground mb-2">
               Notes
             </label>
             <textarea
@@ -343,7 +343,7 @@ export default function JobForm({ job, onClose, onSuccess }: JobFormProps) {
             />
           </div>
 
-          <div className="flex justify-end gap-4 pt-6 border-t">
+          <div className="flex justify-end gap-4 pt-6 border-t dark:border-gray-700">
             <button
               type="button"
               onClick={onClose}

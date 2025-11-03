@@ -92,7 +92,7 @@ export interface CalendarEvent {
 }
 
 export interface AIServiceConfig {
-  provider: 'huggingface' | 'together' | 'openai' | 'ollama';
+  provider: 'huggingface' | 'together' | 'gemini' | 'ollama';
   apiKey?: string;
   model?: string;
   baseUrl?: string;

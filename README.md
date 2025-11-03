@@ -38,9 +38,9 @@ A comprehensive full-stack platform that helps job seekers track applications, e
 
 ### 🤖 AI Integration
 - Modular AI service supporting multiple providers:
-  - Hugging Face (Llama-3-8B-Instruct) - Default
+  - Google Gemini (gemini-pro) - Default
+  - Hugging Face (Llama-3-8B-Instruct)
   - Together AI (Mixtral 8x7B)
-  - OpenAI (GPT-3.5-turbo)
   - Ollama (Local Llama 3)
 
 ## Tech Stack
@@ -49,7 +49,7 @@ A comprehensive full-stack platform that helps job seekers track applications, e
 - **Backend**: Next.js API Routes, Prisma ORM
 - **Database**: PostgreSQL
 - **Authentication**: NextAuth.js
-- **AI Services**: Hugging Face, Together AI, OpenAI, Ollama
+- **AI Services**: Google Gemini, Hugging Face, Together AI, Ollama
 - **File Processing**: PDF-parse, Mammoth (DOCX)
 - **UI Components**: Headless UI, Heroicons, Framer Motion
 
@@ -59,7 +59,7 @@ A comprehensive full-stack platform that helps job seekers track applications, e
 
 - Node.js 18+ 
 - PostgreSQL database
-- AI service API keys (optional, defaults to Hugging Face)
+- AI service API keys (optional, defaults to Google Gemini)
 
 ### Installation
 
@@ -107,14 +107,14 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    EMAIL_SERVER_PASSWORD="YOUR_EMAIL_PASSWORD"
    EMAIL_FROM="YOUR_EMAIL_FROM"
    
-   # AI Services (at least one required)
+      # AI Services (at least one required)
+   GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
    HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_API_KEY"
    TOGETHER_API_KEY="YOUR_TOGETHER_AI_KEY"
-   OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
    
    # AI Configuration
-   AI_PROVIDER="huggingface" # huggingface, together, openai, ollama
-   AI_MODEL="meta-llama/Llama-3-8B-Instruct"
+   AI_PROVIDER="gemini" # gemini, huggingface, together, ollama
+   AI_MODEL="gemini-pro"
    AI_BASE_URL="http://localhost:11434" # for Ollama
    ```
 
@@ -134,7 +134,30 @@ A comprehensive full-stack platform that helps job seekers track applications, e
 
 ## AI Service Setup
 
-### Hugging Face (Recommended - Free tier available)
+### Google Gemini Pro (Recommended - Free tier available, Pro accounts supported)
+**This application uses Gemini Pro by default** and supports both free tier and Pro accounts.
+
+1. **Get your API Key:**
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Sign in with your Google account
+   - Click "Create API Key"
+   - Copy your API key
+
+2. **Add to `.env.local`:**
+   ```env
+   GEMINI_API_KEY="your-api-key-here"
+   AI_PROVIDER="gemini"
+   AI_MODEL="gemini-pro"  # Use "gemini-pro" for Pro accounts or "gemini-1.5-flash" for free tier
+   ```
+
+3. **For Gemini Pro Account Users:**
+   - The default model `gemini-pro` works with Pro accounts
+   - Make sure your API key has Pro access enabled
+   - No additional configuration needed - just set `AI_MODEL="gemini-pro"`
+
+**Note:** The application is fully configured for Gemini Pro. If you're using a Pro account, ensure your API key has access to the Pro models.
+
+### Hugging Face (Free tier available)
 1. Sign up at [huggingface.co](https://huggingface.co)
 2. Create an API token
 3. Add to `.env.local`:
@@ -150,15 +173,6 @@ A comprehensive full-stack platform that helps job seekers track applications, e
    ```env
    TOGETHER_API_KEY="your-key"
    AI_PROVIDER="together"
-   ```
-
-### OpenAI
-1. Sign up at [openai.com](https://openai.com)
-2. Get your API key
-3. Add to `.env.local`:
-   ```env
-   OPENAI_API_KEY="your-key"
-   AI_PROVIDER="openai"
    ```
 
 ### Ollama (Local - Free)

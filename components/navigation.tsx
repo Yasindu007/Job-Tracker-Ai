@@ -43,7 +43,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
       <div className="lg:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 text-gray-400 hover:text-gray-600"
+          className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
         >
           {isOpen ? (
             <XMarkIcon className="h-6 w-6" />
@@ -61,17 +61,17 @@ export default function Navigation({ /* user */ }: NavigationProps) {
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl"
+            className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 shadow-xl"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center">
                   <BriefcaseIcon className="h-8 w-8 text-blue-600" />
-                  <span className="ml-2 text-xl font-bold text-gray-900">JobTracker AI</span>
+                  <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">JobTracker AI</span>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600"
+                  className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
@@ -88,8 +88,8 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                       className={cn(
                         'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                         isActive
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       )}
                     >
                       <item.icon className="h-5 w-5 mr-3" />
@@ -99,7 +99,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                 })}
               </nav>
 
-              <div className="mt-8 pt-8 border-t border-gray-200">
+              <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center mb-4">
                   <div className="flex-shrink-0">
                     {user?.profileImageUrl ? (
@@ -109,21 +109,21 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                         alt={user.displayName || 'User'}
                       />
                     ) : (
-                      <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                        <UserIcon className="h-5 w-5 text-gray-600" />
+                      <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+                        <UserIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                       </div>
                     )}
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
                       {user?.displayName || 'User'}
                     </p>
-                    <p className="text-xs text-gray-500">{user?.primaryEmail || 'Not signed in'}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{user?.primaryEmail || 'Not signed in'}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   {theme === 'dark' ? (
                     <SunIcon className="h-5 w-5 mr-3" />
@@ -134,7 +134,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                 </button>
                 <button
                   onClick={() => user && user.signOut({ redirectUrl: '/' })}
-                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
+                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors mt-2"
                 >
                   <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
                   Sign out
@@ -146,11 +146,11 @@ export default function Navigation({ /* user */ }: NavigationProps) {
       )}
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:bg-white lg:border-r lg:border-gray-200">
+      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:bg-white dark:bg-gray-900 lg:border-r lg:border-gray-200 dark:border-gray-800">
         <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex items-center h-16 px-6 border-b border-gray-200">
+          <div className="flex items-center h-16 px-6 border-b border-gray-200 dark:border-gray-800">
             <BriefcaseIcon className="h-8 w-8 text-blue-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">JobTracker AI</span>
+            <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">JobTracker AI</span>
           </div>
           
           <nav className="flex-1 px-4 py-6 space-y-2">
@@ -163,8 +163,8 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                   className={cn(
                     'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                   )}
                 >
                   <item.icon className="h-5 w-5 mr-3" />
@@ -174,7 +174,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
             })}
           </nav>
 
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
                 {user?.profileImageUrl ? (
@@ -184,21 +184,21 @@ export default function Navigation({ /* user */ }: NavigationProps) {
                     alt={user.displayName || 'User'}
                   />
                 ) : (
-                  <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                    <UserIcon className="h-5 w-5 text-gray-600" />
+                  <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+                    <UserIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                   </div>
                 )}
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {user?.displayName || 'User'}
                 </p>
-                <p className="text-xs text-gray-500">{user?.primaryEmail || 'Not signed in'}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.primaryEmail || 'Not signed in'}</p>
               </div>
             </div>
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
               {theme === 'dark' ? (
                 <SunIcon className="h-5 w-5 mr-3" />
@@ -209,7 +209,7 @@ export default function Navigation({ /* user */ }: NavigationProps) {
             </button>
             <button
               onClick={() => user && user.signOut({ redirectUrl: '/' })}
-              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mt-2"
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors mt-2"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
               Sign out

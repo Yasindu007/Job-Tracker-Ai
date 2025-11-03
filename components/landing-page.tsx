@@ -45,19 +45,19 @@ export default function LandingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+            {/* Header */}
+      <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <BriefcaseIcon className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">JobTracker AI</span>
+              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">JobTracker AI</span>
             </div>
             <div className="flex items-center space-x-4">
-              <Link
+                            <Link
                 href="/handler/sign-in"
-                className="text-gray-700 hover:text-blue-600 font-medium"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium"
               >
                 Sign In
               </Link>
@@ -80,7 +80,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-6xl font-bold text-gray-900 mb-6"
+              className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6"
             >
               Land Your Dream Job with{' '}
               <span className="text-blue-600">AI-Powered</span> Tools
@@ -89,7 +89,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
             >
               Track applications, optimize your resume, and prepare for interviews with our comprehensive AI assistant. 
               Get personalized insights to accelerate your job search.
@@ -118,14 +118,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 bg-white">
+            {/* Features Section */}
+      <section id="features" className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Everything You Need for Job Search Success
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Our AI-powered platform combines job tracking, resume optimization, and interview preparation in one comprehensive tool.
             </p>
           </div>
@@ -140,10 +140,10 @@ export default function LandingPage() {
                 className="card p-6 text-center hover:shadow-lg transition-shadow"
               >
                 <feature.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400">
                   {feature.description}
                 </p>
               </motion.div>
@@ -152,15 +152,15 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-gray-50">
+            {/* Benefits Section */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
                 Why Choose JobTracker AI?
               </h2>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
                 Our platform uses advanced AI to provide personalized insights and recommendations, 
                 helping you stand out in today's competitive job market.
               </p>
@@ -174,13 +174,13 @@ export default function LandingPage() {
                     className="flex items-center"
                   >
                     <CheckCircleIcon className="h-6 w-6 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-gray-700">{benefit}</span>
+                    <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
                   </motion.div>
                 ))}
               </div>
             </div>
             <div className="relative">
-              <div className="bg-white rounded-lg shadow-xl p-8">
+              <div className="card p-8">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-500">Job Fit Score</span>
@@ -229,8 +229,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+            {/* Footer */}
+      <footer className="bg-gray-900 dark:bg-black text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">

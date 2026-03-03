@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/stack'
+import { extractTextFromFile } from '@/lib/file-processing'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,32 +18,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    let text: string
-
-    if (file.type === 'application/pdf') {
-      try {
-        const pdf = (await import('pdf-parse')).default
-        const parsed = await pdf(buffer)
-        text = parsed.text
-      } catch (pdfError) {
-        console.error('PDF parsing error:', pdfError)
+    try {
+      const { text } = await extractTextFromFile(file)
+      return NextResponse.json({ text })
+    } catch (parseError) {
+      console.error('File parsing error:', parseError)
+      if (parseError instanceof Error && parseError.message.includes('Unsupported file type')) {
+        return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 })
+      }
+      if (file.type === 'application/pdf') {
         return NextResponse.json({ error: 'Failed to parse PDF. Please ensure the file is not corrupted.' }, { status: 400 })
       }
-    } else if (
-      file.type ===
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ) {
-      const mammoth = await import('mammoth')
-      const result = await mammoth.extractRawText({ buffer })
-      text = result.value
-    } else {
-      return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 })
+      return NextResponse.json({ error: 'Failed to parse document.' }, { status: 400 })
     }
-
-    return NextResponse.json({ text })
   } catch (error) {
     console.error('Error extracting text:', error)
     return NextResponse.json(

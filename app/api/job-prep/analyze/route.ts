@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         errorMessage = 'Local AI API error. Ensure your local model server is running and check AI_BASE_URL/AI_MODEL.'
       } else if (error.message.includes('Gemini API error')) {
         errorMessage = provider === 'gemini' || provider === 'google'
-          ? 'Gemini API error. Please check your API key and try again.'
+          ? error.message
           : 'AI provider API error. Please check AI_PROVIDER/AI_BASE_URL/AI_MODEL and try again.'
       } else if (error.message.includes('API error')) {
         errorMessage = 'AI provider API error. Please check your provider configuration and try again.'

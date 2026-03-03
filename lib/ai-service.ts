@@ -111,48 +111,71 @@ Return the enhanced resume text directly.`
   }
 
   private async callGemini(prompt: string): Promise<string> {
-    if (!this.config.apiKey) {
+    const apiKey = (this.config.apiKey || '').trim().replace(/^["']|["']$/g, '')
+    if (!apiKey) {
       throw new Error('Missing GEMINI_API_KEY. Set it in your environment variables.')
     }
 
-    const model = this.normalizeGeminiModel(this.config.model || 'gemini-1.5-flash')
-    const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${this.config.apiKey}`
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{ text: prompt }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 8192, // Increased for Gemini Pro - supports up to 8192 tokens
-        }
-      }),
+    const requestedModel = this.normalizeGeminiModel(this.config.model || 'gemini-2.5-flash')
+    const modelCandidates = Array.from(new Set([requestedModel, 'gemini-2.5-flash', 'gemini-flash-latest']))
+    const versionCandidates = ['v1', 'v1beta']
+    const requestBody = JSON.stringify({
+      contents: [{
+        parts: [{ text: prompt }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 8192,
+      }
     })
 
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => '')
-      throw new Error(`Gemini API error (${response.status} ${response.statusText}): ${errorText}`)
+    let lastError = ''
+
+    for (const model of modelCandidates) {
+      for (const version of versionCandidates) {
+        const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: requestBody,
+        })
+
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => '')
+          lastError = `${response.status} ${response.statusText} @ ${version}/${model}: ${errorText}`
+          if (response.status === 404) {
+            continue
+          }
+          throw new Error(`Gemini API error (${response.status} ${response.statusText}): ${errorText}`)
+        }
+
+        const data = await response.json()
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+        if (text) {
+          return text
+        }
+      }
     }
 
-    const data = await response.json()
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    throw new Error(`Gemini API error (404 Not Found): No compatible Gemini model found. Tried models: ${modelCandidates.join(', ')}. Last error: ${lastError}`)
   }
 
   private normalizeGeminiModel(model: string): string {
-    const normalized = model.trim().toLowerCase()
+    const cleaned = model.trim().replace(/^["']|["']$/g, '')
+    const normalized = cleaned.toLowerCase()
     // Backward-compatible aliases for older env values still used in many deployments.
     if (normalized === 'gemini-pro') {
-      return 'gemini-1.5-flash'
+      return 'gemini-2.5-flash'
     }
     if (normalized === 'gemini-pro-vision') {
-      return 'gemini-1.5-flash'
+      return 'gemini-2.5-flash'
     }
-    return model
+    if (normalized === 'gemini-1.5-flash' || normalized === 'gemini-1.5-pro' || normalized === 'gemini-1.5-flash-8b') {
+      return 'gemini-2.5-flash'
+    }
+    return cleaned
   }
 
   // For LM Studio / Ollama (OpenAI-compatible) via AI_BASE_URL
@@ -338,7 +361,7 @@ export function createAIService(): AIService {
     case 'gemini':
     case 'google':
       apiKey = process.env.GEMINI_API_KEY
-      model = process.env.AI_MODEL || 'gemini-1.5-flash'
+      model = process.env.AI_MODEL || 'gemini-2.5-flash'
       break
     case 'lmstudio':
     case 'ollama':
@@ -363,7 +386,7 @@ export function createAIService(): AIService {
       break
     default: // gemini
       apiKey = process.env.GEMINI_API_KEY
-      model = process.env.AI_MODEL || 'gemini-1.5-flash'
+      model = process.env.AI_MODEL || 'gemini-2.5-flash'
   }
   
   const config: AIServiceConfig & { baseUrl?: string; model?: string; originalProvider?: string } = {

@@ -65,12 +65,21 @@ export async function POST(request: NextRequest) {
     let errorMessage = 'Internal server error'
     if (error instanceof Error) {
       errorMessage = error.message
+      const provider = (process.env.AI_PROVIDER || (process.env.AI_BASE_URL ? 'local' : 'gemini')).toLowerCase()
       
       // Check for common issues
       if (error.message.includes('GEMINI_API_KEY')) {
-        errorMessage = 'Gemini API key is missing. Please check your environment variables.'
+        errorMessage = provider === 'gemini' || provider === 'google'
+          ? 'Gemini API key is missing. Please check your environment variables.'
+          : 'AI provider key is missing. Please check your environment variables.'
+      } else if (error.message.includes('Local AI API error')) {
+        errorMessage = 'Local AI API error. Ensure your local model server is running and check AI_BASE_URL/AI_MODEL.'
+      } else if (error.message.includes('Gemini API error')) {
+        errorMessage = provider === 'gemini' || provider === 'google'
+          ? 'Gemini API error. Please check your API key and try again.'
+          : 'AI provider API error. Please check AI_PROVIDER/AI_BASE_URL/AI_MODEL and try again.'
       } else if (error.message.includes('API error')) {
-        errorMessage = 'Gemini API error. Please check your API key and try again.'
+        errorMessage = 'AI provider API error. Please check your provider configuration and try again.'
       } else if (error.message.includes('prisma') || error.message.includes('database')) {
         errorMessage = 'Database error. Please check your database connection.'
       }

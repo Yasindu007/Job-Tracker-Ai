@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import AppShell from './app-shell'
 import { 
@@ -15,9 +15,36 @@ import { JobPostingPrep } from '@/types'
 import toast from 'react-hot-toast'
 
 export default function JobPrepAssistant() {
+  const STORAGE_KEY = 'jobPrepAssistantState_v1'
   const [jobPostingText, setJobPostingText] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [prepResults, setPrepResults] = useState<JobPostingPrep | null>(null)
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (!saved) return
+      const parsed = JSON.parse(saved) as { jobPostingText?: string; prepResults?: JobPostingPrep | null }
+      setJobPostingText(parsed.jobPostingText || '')
+      setPrepResults(parsed.prepResults || null)
+    } catch (error) {
+      console.warn('Failed to restore saved Job Prep state:', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          jobPostingText,
+          prepResults,
+        })
+      )
+    } catch (error) {
+      console.warn('Failed to persist Job Prep state:', error)
+    }
+  }, [jobPostingText, prepResults])
 
   const handleAnalyze = async () => {
     if (!jobPostingText.trim()) {
@@ -103,6 +130,20 @@ export default function JobPrepAssistant() {
                   </>
                 )}
               </button>
+
+              {(jobPostingText || prepResults) && (
+                <button
+                  onClick={() => {
+                    setJobPostingText('')
+                    setPrepResults(null)
+                    localStorage.removeItem(STORAGE_KEY)
+                  }}
+                  disabled={isAnalyzing}
+                  className="btn btn-outline btn-md w-full mt-2"
+                >
+                  Clear Saved Analysis
+                </button>
+              )}
             </div>
           </div>
 
